@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="以高冷帅萌宠为主题的个人网站，展示作品、记录想法和在线实验。"
+    />
+    <title>祝荣鹏 | 高冷萌宠主题站</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="回到首页">
+        <img src="./assets/mascot-original-cool.png" alt="" />
+        <span>
+          <strong>祝荣鹏</strong>
+          <small>zhurongpeng.xyz</small>
+        </span>
+      </a>
+      <nav aria-label="主导航">
+        <a href="#identity">形象</a>
+        <a href="#works">作品</a>
+        <a href="#notes">记录</a>
+        <a href="#contact">联系</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__copy">
+          <p class="eyebrow">Cool cute mascot</p>
+          <h1 id="hero-title">一只高冷但很好rua的网页守护兽。</h1>
+          <p class="intro">
+            这版网站围绕第一只萌宠重新设计：大耳朵、冰蓝眼、巧克力粗线条和黑色领巾，整体更像一个可以持续扩展的个人品牌形象。
+          </p>
+          <div class="actions">
+            <a class="button button--primary" href="#identity">查看萌宠设定</a>
+            <button id="refreshButton" class="button" type="button">
+              切换今日状态
+            </button>
+          </div>
+        </div>
+
+        <figure class="hero__mascot">
+          <img src="./assets/mascot-hero.png" alt="高冷帅萌宠主形象" />
+          <figcaption>
+            <span id="connectionStatus">高冷营业中</span>
+            <small id="timeText">正在同步今日心情...</small>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section class="mood-strip" aria-label="萌宠状态">
+        <article>
+          <span>眼神</span>
+          <strong>半眯冰蓝眼</strong>
+        </article>
+        <article>
+          <span>气质</span>
+          <strong id="quoteText">有点拽，但会陪你上线</strong>
+        </article>
+        <article>
+          <span>当前环境</span>
+          <strong id="browserText">正在读取浏览器状态</strong>
+        </article>
+      </section>
+
+      <section id="identity" class="identity">
+        <div class="section__head">
+          <p class="eyebrow">Mascot identity</p>
+          <h2>把“帅气高冷”和“一眼可爱”固定成网站识别点。</h2>
+        </div>
+        <div class="identity__grid">
+          <article class="identity__main">
+            <img src="./assets/mascot-original-cool.png" alt="萌宠原始设定" />
+            <div>
+              <h3>主形象</h3>
+              <p>
+                灵感来自耳廓狐和雪豹幼崽：尖耳朵负责帅，圆身体负责萌，黑色领巾让它更像有性格的网站角色。
+              </p>
+            </div>
+          </article>
+          <article class="trait-card">
+            <span>01</span>
+            <h3>大耳朵轮廓</h3>
+            <p>远看先记住形状，缩小到头像或 favicon 也能保留辨识度。</p>
+          </article>
+          <article class="trait-card">
+            <span>02</span>
+            <h3>巧克力粗线</h3>
+            <p>线条像手绘贴纸，减少机械感，让页面更轻松亲近。</p>
+          </article>
+          <article class="trait-card">
+            <span>03</span>
+            <h3>冰蓝眼神</h3>
+            <p>冷色小眼睛和暖色身体形成反差，看起来高冷但不疏离。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="works" class="section">
+        <div class="section__head section__head--wide">
+          <p class="eyebrow">Works</p>
+          <h2>先让主页有明确角色，再慢慢长出作品、工具和记录。</h2>
+        </div>
+        <div class="work-grid">
+          <article class="work-card work-card--feature">
+            <img src="./assets/mascot-peek.png" alt="探头的萌宠" />
+            <span>入口 01</span>
+            <h3>在线主页</h3>
+            <p>用这个萌宠作为第一视觉，访问者一进来就知道这是一个有记忆点的个人站。</p>
+          </article>
+          <article class="work-card">
+            <span>入口 02</span>
+            <h3>学习记录</h3>
+            <p>后续可以放编程、设计、AI 工具、部署过程和项目复盘。</p>
+          </article>
+          <article class="work-card">
+            <span>入口 03</span>
+            <h3>小工具实验室</h3>
+            <p>可以继续加入天气、倒计时、留言、作品墙或小游戏。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="notes" class="notes">
+        <img src="./assets/mascot-moon.png" alt="躺在月亮垫上的萌宠" />
+        <div>
+          <p class="eyebrow">Notes</p>
+          <h2>这只萌宠可以继续扩展成一整套网站视觉系统。</h2>
+          <p>
+            下一步可以做透明背景、表情包、404 页面、加载动画和客服欢迎态。每个位置都用同一套耳朵、眼睛、领巾和配色，网站会更统一。
+          </p>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <p class="eyebrow">Contact</p>
+        <h2>想放什么内容，下一版就继续加。</h2>
+        <p>
+          这里可以替换成邮箱、QQ、微信二维码、GitHub 链接，或者你的个人介绍。现在这版先把网站的视觉主题立起来。
+        </p>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
