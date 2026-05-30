@@ -5,10 +5,10 @@ const browserText = document.querySelector("#browserText");
 const refreshButton = document.querySelector("#refreshButton");
 
 function setLoading() {
-  connectionStatus.textContent = "正在连接公网";
-  quoteText.textContent = "正在从 GitHub API 读取...";
-  timeText.textContent = "正在从 WorldTime API 读取...";
-  browserText.textContent = navigator.onLine ? "浏览器报告：在线" : "浏览器报告：离线";
+  connectionStatus.textContent = "连接中";
+  quoteText.textContent = "正在读取 GitHub API...";
+  timeText.textContent = "正在同步网络时间...";
+  browserText.textContent = navigator.onLine ? "浏览器在线" : "浏览器离线";
 }
 
 async function fetchText(url) {
@@ -27,6 +27,13 @@ async function fetchJson(url) {
   return response.json();
 }
 
+function formatTime(value) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(new Date(value));
+}
+
 async function loadOnlineData() {
   setLoading();
 
@@ -38,27 +45,26 @@ async function loadOnlineData() {
   if (results[0].status === "fulfilled") {
     quoteText.textContent = results[0].value;
   } else {
-    quoteText.textContent = "GitHub API 暂时不可用，请稍后再试。";
+    quoteText.textContent = "公网 API 暂时没有响应，页面仍可正常访问。";
   }
 
   if (results[1].status === "fulfilled") {
     const { datetime, timezone } = results[1].value;
-    const date = new Date(datetime);
-    timeText.textContent = `${timezone}：${date.toLocaleString("zh-CN")}`;
+    timeText.textContent = `${timezone} · ${formatTime(datetime)}`;
   } else {
-    timeText.textContent = "WorldTime API 暂时不可用，请稍后再试。";
+    timeText.textContent = `本地时间 · ${formatTime(Date.now())}`;
   }
 
   const hasOnlineData = results.some((result) => result.status === "fulfilled");
-  connectionStatus.textContent = hasOnlineData ? "公网连接成功" : "公网连接失败";
-  browserText.textContent = `${navigator.userAgent}`;
+  connectionStatus.textContent = hasOnlineData ? "在线运行" : "等待网络";
+  browserText.textContent = navigator.userAgent.replace(/\s+/g, " ");
 }
 
 refreshButton.addEventListener("click", loadOnlineData);
 window.addEventListener("online", loadOnlineData);
 window.addEventListener("offline", () => {
-  connectionStatus.textContent = "浏览器已离线";
-  browserText.textContent = "浏览器报告：离线";
+  connectionStatus.textContent = "浏览器离线";
+  browserText.textContent = "当前设备暂时离线";
 });
 
 loadOnlineData();
