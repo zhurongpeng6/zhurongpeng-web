@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="祝荣鹏的个人网站，记录作品、想法与在线实验。"
+    />
+    <title>祝荣鹏 | 个人网站</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="祝荣鹏主页">
+        <span>ZRP</span>
+        <strong>祝荣鹏</strong>
+      </a>
+      <nav aria-label="主导航">
+        <a href="#works">作品</a>
+        <a href="#notes">记录</a>
+        <a href="#contact">联系</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">zhurongpeng.xyz</p>
+          <h1>把想法做成可以被看见、被访问、被继续迭代的东西。</h1>
+          <p class="intro">
+            这里是祝荣鹏的个人网站。现在它已经从本地页面升级成在线站点，
+            接下来可以继续放作品、学习笔记、项目展示和一些有趣的小工具。
+          </p>
+          <div class="actions">
+            <a class="button button--primary" href="#works">查看作品</a>
+            <button id="refreshButton" class="button" type="button">
+              刷新在线状态
+            </button>
+          </div>
+        </div>
+
+        <aside class="status-card" aria-label="网站在线状态">
+          <span class="pulse" aria-hidden="true"></span>
+          <p>当前状态</p>
+          <strong id="connectionStatus">正在检测</strong>
+          <small id="timeText">等待网络时间...</small>
+        </aside>
+      </section>
+
+      <section class="metrics" aria-label="实时信息">
+        <article>
+          <span>公网响应</span>
+          <strong id="quoteText">正在读取 GitHub API...</strong>
+        </article>
+        <article>
+          <span>访问环境</span>
+          <strong id="browserText">正在检测浏览器...</strong>
+        </article>
+        <article>
+          <span>站点方向</span>
+          <strong>个人主页 / 作品集 / 在线实验室</strong>
+        </article>
+      </section>
+
+      <section id="works" class="section">
+        <div class="section__head">
+          <p class="eyebrow">Works</p>
+          <h2>先放三个入口，后面慢慢长出来。</h2>
+        </div>
+        <div class="work-grid">
+          <article class="work-card">
+            <span>01</span>
+            <h3>在线主页</h3>
+            <p>一个真正可以通过域名访问的网站，已经接入 Vercel 与自定义域名。</p>
+          </article>
+          <article class="work-card">
+            <span>02</span>
+            <h3>学习记录</h3>
+            <p>可以用来整理编程、设计、AI 工具和项目部署过程中的经验。</p>
+          </article>
+          <article class="work-card">
+            <span>03</span>
+            <h3>小工具实验室</h3>
+            <p>以后可以加入天气、倒计时、作品墙、留言入口或者小游戏。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="notes" class="split-section">
+        <div>
+          <p class="eyebrow">Notes</p>
+          <h2>网站不是一次完成的，它会跟着你一起更新。</h2>
+        </div>
+        <p>
+          今天先完成“能上线、能访问、能展示”的第一版。之后每次改动只要推送到
+          GitHub，Vercel 就会自动部署，网站会越来越像你自己的数字名片。
+        </p>
+      </section>
+
+      <section id="contact" class="contact">
+        <p class="eyebrow">Contact</p>
+        <h2>想放什么内容，下一版就继续加。</h2>
+        <p>
+          这个位置可以换成邮箱、QQ、微信二维码、GitHub 链接，或者你的个人介绍。
+        </p>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
