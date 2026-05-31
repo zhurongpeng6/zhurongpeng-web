@@ -4,67 +4,61 @@ const timeText = document.querySelector("#timeText");
 const browserText = document.querySelector("#browserText");
 const refreshButton = document.querySelector("#refreshButton");
 
-function setLoading() {
-  connectionStatus.textContent = "连接中";
-  quoteText.textContent = "正在读取 GitHub API...";
-  timeText.textContent = "正在同步网络时间...";
-  browserText.textContent = navigator.onLine ? "浏览器在线" : "浏览器离线";
-}
-
-async function fetchText(url) {
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
+const moods = [
+  {
+    status: "高冷营业中",
+    quote: "有点拽，但会陪你上线"
+  },
+  {
+    status: "耳朵已竖起",
+    quote: "今天适合发布一点新东西"
+  },
+  {
+    status: "酷酷巡逻中",
+    quote: "页面正常，气场也正常"
+  },
+  {
+    status: "冰蓝眼待机",
+    quote: "看起来很淡定，其实在认真工作"
   }
-  return response.text();
-}
+];
 
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  return response.json();
-}
+let moodIndex = 0;
 
 function formatTime(value) {
   return new Intl.DateTimeFormat("zh-CN", {
-    dateStyle: "medium",
-    timeStyle: "short"
-  }).format(new Date(value));
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(value);
 }
 
-async function loadOnlineData() {
-  setLoading();
+function getBrowserLabel() {
+  const agent = navigator.userAgent;
 
-  const results = await Promise.allSettled([
-    fetchText("https://api.github.com/zen"),
-    fetchJson("https://worldtimeapi.org/api/ip")
-  ]);
-
-  if (results[0].status === "fulfilled") {
-    quoteText.textContent = results[0].value;
-  } else {
-    quoteText.textContent = "公网 API 暂时没有响应，页面仍可正常访问。";
-  }
-
-  if (results[1].status === "fulfilled") {
-    const { datetime, timezone } = results[1].value;
-    timeText.textContent = `${timezone} · ${formatTime(datetime)}`;
-  } else {
-    timeText.textContent = `本地时间 · ${formatTime(Date.now())}`;
-  }
-
-  const hasOnlineData = results.some((result) => result.status === "fulfilled");
-  connectionStatus.textContent = hasOnlineData ? "在线运行" : "等待网络";
-  browserText.textContent = navigator.userAgent.replace(/\s+/g, " ");
+  if (agent.includes("Edg/")) return "Edge 浏览器在线";
+  if (agent.includes("Chrome/")) return "Chrome 浏览器在线";
+  if (agent.includes("Firefox/")) return "Firefox 浏览器在线";
+  if (agent.includes("Safari/")) return "Safari 浏览器在线";
+  return navigator.onLine ? "浏览器在线" : "浏览器离线";
 }
 
-refreshButton.addEventListener("click", loadOnlineData);
-window.addEventListener("online", loadOnlineData);
+function renderMood() {
+  const mood = moods[moodIndex % moods.length];
+  connectionStatus.textContent = mood.status;
+  quoteText.textContent = mood.quote;
+  timeText.textContent = `本地时间 · ${formatTime(new Date())}`;
+  browserText.textContent = getBrowserLabel();
+  moodIndex += 1;
+}
+
+refreshButton.addEventListener("click", renderMood);
+window.addEventListener("online", renderMood);
 window.addEventListener("offline", () => {
-  connectionStatus.textContent = "浏览器离线";
-  browserText.textContent = "当前设备暂时离线";
+  connectionStatus.textContent = "离线趴窝中";
+  quoteText.textContent = "网络暂时不在，但萌宠还在";
+  browserText.textContent = "当前设备离线";
 });
 
-loadOnlineData();
+renderMood();
