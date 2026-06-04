@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>喝 | 萌宠互动</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="playroom-shell" data-mode="drink">
+      <header class="room-header">
+        <a class="back-link" href="./index.html">回到转盘</a>
+        <div>
+          <p class="kicker">Drink room</p>
+          <h1>补水时间。</h1>
+        </div>
+        <p class="room-meter">补水 <strong id="actionCount">0</strong> 次</p>
+      </header>
+
+      <section class="interactive-room interactive-room--drink" aria-label="喝互动房间">
+        <div class="room-effects" aria-hidden="true">
+          <span class="fx fx-drop"></span>
+          <span class="fx fx-wind"></span>
+          <span class="fx fx-word">哈～</span>
+        </div>
+
+        <div class="pet-zone" id="petZone">
+          <div class="css-pet" id="cssPet" aria-label="等待喝水的萌宠" role="img">
+            <span class="pet-ear pet-ear--left"></span>
+            <span class="pet-ear pet-ear--right"></span>
+            <span class="pet-head">
+              <span class="pet-mark"></span>
+              <span class="pet-eye pet-eye--left"></span>
+              <span class="pet-eye pet-eye--right"></span>
+              <span class="pet-mouth"></span>
+              <span class="pet-sweat"></span>
+            </span>
+            <span class="pet-body">
+              <span class="pet-paw pet-paw--left"></span>
+              <span class="pet-paw pet-paw--right"></span>
+              <span class="pet-belly"></span>
+            </span>
+            <span class="pet-tail"></span>
+            <span class="pet-sleep"></span>
+          </div>
+          <p class="pet-status" id="petStatus">有点口渴，眼神委屈。</p>
+        </div>
+
+        <div class="item-field" aria-label="饮品区">
+          <button class="play-item play-item--drink" type="button" data-kind="drink" style="--x: 10%; --y: 16%">🥤</button>
+          <button class="play-item play-item--drink" type="button" data-kind="drink" style="--x: 76%; --y: 16%">🧋</button>
+          <button class="play-item play-item--drink" type="button" data-kind="drink" style="--x: 18%; --y: 70%">🧃</button>
+          <button class="play-item play-item--drink" type="button" data-kind="drink" style="--x: 74%; --y: 68%">🧊</button>
+          <button class="play-item play-item--drink" type="button" data-kind="drink" style="--x: 45%; --y: 9%">☕</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./state-room.js"></script>
+  </body>
+</html>

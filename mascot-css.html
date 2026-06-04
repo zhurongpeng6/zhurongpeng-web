@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>萌宠代码复刻</title>
+    <style>
+      :root {
+        --ink: #3b2a22;
+        --fur: #fff3d8;
+        --fur-light: #fffaf0;
+        --inner-ear: #d6b692;
+        --inner-ear-soft: #ead7bc;
+        --eye: #4e82ce;
+        --scarf: #343235;
+        --spot: #a89a8b;
+        --paper: #fff9ec;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at center, #fffdf8 0 34%, transparent 66%),
+          linear-gradient(135deg, #fff8e8, #f3dfbd);
+      }
+
+      .stage {
+        width: min(96vw, 900px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        background: var(--paper);
+      }
+
+      .mascot {
+        width: min(92vw, 760px);
+        height: auto;
+        overflow: visible;
+        filter: drop-shadow(0 28px 18px rgba(59, 42, 34, 0.14));
+      }
+
+      .outline {
+        stroke: var(--ink);
+        stroke-width: 22;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .line {
+        fill: none;
+        stroke: var(--ink);
+        stroke-width: 15;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .thin {
+        fill: none;
+        stroke: var(--ink);
+        stroke-width: 10;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .fur {
+        fill: var(--fur);
+      }
+
+      .fur-light {
+        fill: var(--fur-light);
+      }
+
+      .ear {
+        fill: var(--inner-ear);
+      }
+
+      .ear-soft {
+        fill: var(--inner-ear-soft);
+      }
+
+      .eye {
+        fill: var(--eye);
+      }
+
+      .dark {
+        fill: var(--ink);
+      }
+
+      .scarf {
+        fill: var(--scarf);
+      }
+
+      .spot {
+        fill: var(--spot);
+        opacity: 0.76;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage">
+      <svg
+        class="mascot"
+        viewBox="0 0 1000 1000"
+        role="img"
+        aria-label="大耳朵、冰蓝眼、黑领巾的高冷帅萌宠代码复刻"
+      >
+        <!-- tail, placed behind body exactly like the reference: left-lower and tucked in -->
+        <path
+          class="outline ear"
+          d="M352 705
+             C285 656 212 713 232 804
+             C250 890 354 905 410 840
+             C451 793 430 731 373 733
+             C345 734 322 755 316 784"
+        />
+        <path
+          class="line"
+          d="M377 733 C343 733 322 755 316 784"
+        />
+        <path
+          class="fur-light"
+          d="M273 819 C294 859 356 860 385 823
+             C351 840 314 823 303 782
+             C293 805 283 817 273 819Z"
+        />
+        <ellipse class="spot" cx="338" cy="825" rx="15" ry="12" />
+        <ellipse class="spot" cx="366" cy="802" rx="11" ry="9" />
+
+        <!-- ears: very large, high, and tilted outward -->
+        <path
+          class="outline fur"
+          d="M427 399
+             C340 368 265 294 227 200
+             C203 139 222 102 274 114
+             C397 144 511 245 556 363
+             C528 382 480 397 427 399Z"
+        />
+        <path
+          class="outline fur"
+          d="M573 399
+             C660 368 735 294 773 200
+             C797 139 778 102 726 114
+             C603 144 489 245 444 363
+             C472 382 520 397 573 399Z"
+        />
+        <path
+          class="ear"
+          d="M393 377
+             C323 336 279 268 255 171
+             C346 199 440 275 508 356
+             C470 360 429 368 393 377Z"
+        />
+        <path
+          class="ear"
+          d="M607 377
+             C677 336 721 268 745 171
+             C654 199 560 275 492 356
+             C530 360 571 368 607 377Z"
+        />
+        <path
+          class="ear-soft"
+          d="M371 360
+             C320 319 292 253 280 194
+             C335 216 398 268 455 340Z"
+        />
+        <path
+          class="ear-soft"
+          d="M629 360
+             C680 319 708 253 720 194
+             C665 216 602 268 545 340Z"
+        />
+        <path
+          class="fur-light"
+          d="M401 360
+             C359 347 331 322 318 293
+             C348 282 400 300 445 349
+             C430 359 416 363 401 360Z"
+        />
+        <path
+          class="fur-light"
+          d="M599 360
+             C641 347 669 322 682 293
+             C652 282 600 300 555 349
+             C570 359 584 363 599 360Z"
+        />
+
+        <!-- body: shorter than head, centered under scarf -->
+        <path
+          class="outline fur"
+          d="M379 611
+             C334 652 314 719 325 827
+             C331 900 382 921 500 921
+             C618 921 669 900 675 827
+             C686 719 666 652 621 611
+             C590 636 549 650 500 650
+             C451 650 410 636 379 611Z"
+        />
+        <path class="line" d="M410 764 C424 826 436 878 459 912" />
+        <path class="line" d="M590 764 C576 826 564 878 541 912" />
+        <path class="thin" d="M384 895 C384 872 392 853 407 842" />
+        <path class="thin" d="M487 915 C487 886 493 864 503 844" />
+        <path class="thin" d="M616 895 C616 872 608 853 593 842" />
+        <ellipse
+          class="spot"
+          cx="384"
+          cy="755"
+          rx="16"
+          ry="12"
+          transform="rotate(-30 384 755)"
+        />
+        <ellipse
+          class="spot"
+          cx="353"
+          cy="819"
+          rx="12"
+          ry="23"
+          transform="rotate(24 353 819)"
+        />
+        <ellipse class="spot" cx="388" cy="835" rx="14" ry="20" />
+        <ellipse
+          class="spot"
+          cx="644"
+          cy="829"
+          rx="12"
+          ry="31"
+          transform="rotate(8 644 829)"
+        />
+
+        <!-- scarf: black triangle starts directly under head, like the reference -->
+        <path
+          class="outline scarf"
+          d="M331 601
+             C379 636 434 652 500 652
+             C566 652 621 636 669 601
+             L584 735
+             L500 670
+             L416 735Z"
+        />
+
+        <!-- head: wide, low, cheeky, occupying the middle; drawn after body -->
+        <path
+          class="outline fur"
+          d="M278 445
+             C266 392 312 347 397 337
+             C426 315 458 313 500 335
+             C542 313 574 315 603 337
+             C688 347 734 392 722 445
+             C770 460 753 504 708 504
+             C732 540 700 578 656 573
+             C633 628 568 655 500 655
+             C432 655 367 628 344 573
+             C300 578 268 540 292 504
+             C247 504 230 460 278 445Z"
+        />
+        <path
+          class="line"
+          d="M453 339 C476 314 487 317 500 344
+             C513 317 524 314 547 339"
+        />
+        <path class="line" d="M295 509 C259 515 252 544 296 551" />
+        <path class="line" d="M705 509 C741 515 748 544 704 551" />
+
+        <!-- forehead diamond -->
+        <path class="scarf" d="M500 430 L532 493 L500 558 L468 493Z" />
+
+        <!-- eyes and heavy eyelids: placed low and far apart -->
+        <path
+          class="outline eye"
+          d="M356 556
+             C400 570 445 569 482 551
+             C475 620 386 638 356 556Z"
+        />
+        <path
+          class="outline eye"
+          d="M644 556
+             C600 570 555 569 518 551
+             C525 620 614 638 644 556Z"
+        />
+        <ellipse class="dark" cx="422" cy="585" rx="22" ry="35" />
+        <ellipse class="dark" cx="578" cy="585" rx="22" ry="35" />
+        <path class="line" d="M345 550 C392 560 439 560 488 542" />
+        <path class="line" d="M655 550 C608 560 561 560 512 542" />
+
+        <!-- face spots -->
+        <ellipse
+          class="spot"
+          cx="403"
+          cy="489"
+          rx="23"
+          ry="11"
+          transform="rotate(35 403 489)"
+        />
+        <ellipse
+          class="spot"
+          cx="445"
+          cy="503"
+          rx="27"
+          ry="13"
+          transform="rotate(56 445 503)"
+        />
+        <ellipse
+          class="spot"
+          cx="600"
+          cy="489"
+          rx="25"
+          ry="12"
+          transform="rotate(-58 600 489)"
+        />
+        <ellipse
+          class="spot"
+          cx="335"
+          cy="617"
+          rx="29"
+          ry="15"
+          transform="rotate(15 335 617)"
+        />
+        <ellipse
+          class="spot"
+          cx="666"
+          cy="617"
+          rx="23"
+          ry="13"
+          transform="rotate(-15 666 617)"
+        />
+        <ellipse
+          class="spot"
+          cx="377"
+          cy="642"
+          rx="21"
+          ry="11"
+          transform="rotate(10 377 642)"
+        />
+
+        <!-- nose and small stern mouth -->
+        <path
+          class="dark"
+          d="M476 623
+             C476 605 524 605 524 623
+             C520 642 480 642 476 623Z"
+        />
+        <path class="thin" d="M500 640 C500 660 480 664 468 652" />
+        <path class="thin" d="M500 640 C500 660 520 664 532 652" />
+      </svg>
+    </main>
+  </body>
+</html>
