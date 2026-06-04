@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="一个以炫技为唯一主题的前端动效转盘，进入十五种不同的酷炫动态网页风格。"
+    />
+    <title>炫技转盘</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas class="portal-canvas" id="portalCanvas" aria-hidden="true"></canvas>
+    <main class="portal-shell" id="top">
+      <header class="site-header" aria-label="站点信息">
+        <a class="brand-mark" href="./index.html" aria-label="回到炫技转盘">
+          <img src="./assets/mascot-original-cool.png" alt="" />
+          <span>
+            <strong>炫技</strong>
+            <small>motion roulette</small>
+          </span>
+        </a>
+        <p class="visit-note">十五个入口，顺序固定，返回不乱</p>
+      </header>
+
+      <section class="portal-stage" aria-labelledby="portal-title">
+        <div class="portal-copy">
+          <p class="kicker">Web effect roulette</p>
+          <h1 id="portal-title">拖动转盘，撞进十五种炫技现场。</h1>
+          <p class="lead">
+            按住圆盘任意位置拖动，松手后按力度飞旋。指针停在哪个入口，就进入哪一种极限动效页面。
+            首页背景采用 Data Drift 式引力透镜，让转盘本身成为主特效。
+          </p>
+        </div>
+
+        <div class="roulette-panel">
+          <div class="roulette-cluster">
+            <div class="main-wheel-wrap">
+              <div class="pointer" aria-hidden="true"></div>
+              <div
+                class="roulette"
+                id="roulette"
+                role="application"
+                aria-label="炫技动效转盘。左右方向键旋转，回车进入当前入口。"
+                tabindex="0"
+              >
+                <div class="wheel-glow" aria-hidden="true"></div>
+                <div class="wheel" id="wheel"></div>
+                <button class="hub-button" id="enterButton" type="button">
+                  <span>进入</span>
+                  <strong id="hubLabel">炫技</strong>
+                </button>
+              </div>
+            </div>
+
+            <nav class="featured-wheel" aria-label="精选特效小转盘">
+              <a class="featured-spoke" href="./duality-distortion.html" style="--i: 0">
+                <span>01</span><strong>渐变裂像</strong>
+              </a>
+              <a class="featured-spoke" href="./cubic-gallery.html" style="--i: 1">
+                <span>02</span><strong>立方画廊</strong>
+              </a>
+              <a class="featured-spoke" href="./western-parallax.html" style="--i: 2">
+                <span>03</span><strong>荒野卷轴</strong>
+              </a>
+              <a class="featured-spoke" href="./gta6-promo.html" style="--i: 3">
+                <span>04</span><strong>GTA6 宣发</strong>
+              </a>
+              <a class="featured-spoke" href="./dither-physics.html" style="--i: 4">
+                <span>05</span><strong>物理抖动</strong>
+              </a>
+              <a class="featured-core" href="./duality-distortion.html">
+                <span>精选</span><strong>5</strong>
+              </a>
+            </nav>
+          </div>
+          <p class="drag-hint" id="dragHint">拖动圆盘试试力度</p>
+        </div>
+
+        <aside class="entry-preview" aria-live="polite">
+          <img id="previewImage" src="./assets/mascot-peek.png" alt="" />
+          <div>
+            <p class="kicker" id="previewMeta">当前入口</p>
+            <h2 id="previewTitle">粒子重组炫技</h2>
+            <p id="previewText">几千个亮点会炸开、逃逸、旋回，再把炫技两个字拼回屏幕中央。</p>
+            <a class="entry-link" id="previewLink" href="./particles.html">进入粒子字</a>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
