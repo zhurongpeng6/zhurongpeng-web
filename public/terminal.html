@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>终端雨 | 炫技</title>
+    <link rel="stylesheet" href="./showcase.css" />
+  </head>
+  <body class="showcase-body" data-effect="terminal">
+    <a class="showcase-nav" href="./index.html">返回转盘</a>
+    <main class="showcase-stage">
+      <canvas class="showcase-canvas" aria-hidden="true"></canvas>
+      <section class="showcase-copy" aria-labelledby="showcase-title">
+        <p class="showcase-kicker">Character Typing</p>
+        <h1 class="showcase-title" id="showcase-title">炫技</h1>
+        <p class="showcase-tagline">命令行不断输入、执行、刷新，把页面伪装成正在跑的视觉引擎。</p>
+        <div class="showcase-badges" aria-label="效果标签">
+          <span>terminal</span><span>typing</span><span>matrix</span>
+        </div>
+      </section>
+      <aside class="terminal-window" aria-label="终端输出">
+        <div class="terminal-bar"><span></span><span></span><span></span></div>
+        <p class="terminal-line">$ <span id="typedCommand"></span><span class="terminal-cursor"></span></p>
+        <p class="terminal-line" id="typedOutput">&gt; boot: visual engine online</p>
+      </aside>
+      <p class="showcase-hint">字符循环输入</p>
+    </main>
+    <script src="./showcase.js"></script>
+  </body>
+</html>

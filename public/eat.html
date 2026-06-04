@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>吃 | 萌宠互动</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="playroom-shell" data-mode="eat">
+      <header class="room-header">
+        <a class="back-link" href="./index.html">回到转盘</a>
+        <div>
+          <p class="kicker">Eat room</p>
+          <h1>投喂时间。</h1>
+        </div>
+        <p class="room-meter">投喂 <strong id="actionCount">0</strong> 次</p>
+      </header>
+
+      <section class="interactive-room interactive-room--eat" aria-label="吃互动房间">
+        <div class="room-effects" aria-hidden="true">
+          <span class="fx fx-heart">❤</span>
+          <span class="fx fx-star">✦</span>
+          <span class="fx fx-word">吧唧</span>
+        </div>
+
+        <div class="pet-zone" id="petZone">
+          <div class="css-pet" id="cssPet" aria-label="等待投喂的萌宠" role="img">
+            <span class="pet-ear pet-ear--left"></span>
+            <span class="pet-ear pet-ear--right"></span>
+            <span class="pet-head">
+              <span class="pet-mark"></span>
+              <span class="pet-eye pet-eye--left"></span>
+              <span class="pet-eye pet-eye--right"></span>
+              <span class="pet-mouth"></span>
+              <span class="pet-drool"></span>
+            </span>
+            <span class="pet-body">
+              <span class="pet-paw pet-paw--left"></span>
+              <span class="pet-paw pet-paw--right"></span>
+              <span class="pet-belly"></span>
+            </span>
+            <span class="pet-tail"></span>
+            <span class="pet-sleep"></span>
+          </div>
+          <p class="pet-status" id="petStatus">盯着远处的食物。</p>
+        </div>
+
+        <div class="item-field" aria-label="食物区">
+          <button class="play-item play-item--eat" type="button" data-kind="food" style="--x: 8%; --y: 18%">🍪</button>
+          <button class="play-item play-item--eat" type="button" data-kind="food" style="--x: 72%; --y: 14%">🍙</button>
+          <button class="play-item play-item--eat" type="button" data-kind="food" style="--x: 18%; --y: 72%">🍓</button>
+          <button class="play-item play-item--eat" type="button" data-kind="food" style="--x: 78%; --y: 66%">🥞</button>
+          <button class="play-item play-item--eat" type="button" data-kind="food" style="--x: 44%; --y: 10%">🍤</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./state-room.js"></script>
+  </body>
+</html>

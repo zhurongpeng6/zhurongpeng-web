@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>描线路 | 炫技</title>
+    <link rel="stylesheet" href="./showcase.css" />
+  </head>
+  <body class="showcase-body" data-effect="draw">
+    <a class="showcase-nav" href="./index.html">返回转盘</a>
+    <main class="showcase-stage">
+      <svg class="draw-board" viewBox="0 0 1200 720" aria-hidden="true">
+        <path class="draw-path" d="M60 590 C180 380 250 90 420 210 C560 310 410 520 610 520 C820 520 760 110 1020 120 C1110 124 1140 190 1120 260" />
+        <path class="draw-path" d="M110 170 C300 120 350 620 520 430 C660 270 700 120 840 180 C990 246 950 560 1130 540" />
+        <path class="draw-path" d="M180 360 H370 L430 250 L520 470 L620 300 L720 450 H1040" />
+      </svg>
+      <section class="showcase-copy" aria-labelledby="showcase-title">
+        <p class="showcase-kicker">SVG Path Drawing</p>
+        <h1 class="showcase-title" id="showcase-title">炫技</h1>
+        <p class="showcase-tagline">线条自动绘制、断裂、再追上文字，像可视化电路在启动。</p>
+        <div class="showcase-badges" aria-label="效果标签">
+          <span>svg</span><span>stroke</span><span>circuit</span>
+        </div>
+      </section>
+      <p class="showcase-hint">路径循环描线</p>
+    </main>
+    <script src="./showcase.js"></script>
+  </body>
+</html>

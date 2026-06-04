@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>裁切幕 | 炫技</title>
+    <link rel="stylesheet" href="./showcase.css" />
+  </head>
+  <body class="showcase-body" data-effect="reveal">
+    <a class="showcase-nav" href="./index.html">返回转盘</a>
+    <main class="showcase-stage">
+      <div class="reveal-stack" aria-hidden="true">
+        <span class="reveal-slab" style="--slab: oklch(0.72 0.24 352 / 0.34)"></span>
+        <span class="reveal-slab" style="--slab: oklch(0.8 0.2 205 / 0.3)"></span>
+        <span class="reveal-slab" style="--slab: oklch(0.82 0.2 116 / 0.24)"></span>
+      </div>
+      <section class="showcase-copy" aria-labelledby="showcase-title">
+        <p class="showcase-kicker">Clip-Path Reveal</p>
+        <h1 class="showcase-title" id="showcase-title">炫技</h1>
+        <p class="showcase-tagline">色块像高速快门切开屏幕，文字从裁切窗口里被连续揭示。</p>
+        <div class="showcase-badges" aria-label="效果标签">
+          <span>clip</span><span>wipe</span><span>mask</span>
+        </div>
+      </section>
+      <p class="showcase-hint">裁切层循环揭幕</p>
+    </main>
+    <script src="./showcase.js"></script>
+  </body>
+</html>

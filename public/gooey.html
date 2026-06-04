@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>黏液场 | 炫技</title>
+    <link rel="stylesheet" href="./showcase.css" />
+  </head>
+  <body class="showcase-body" data-effect="gooey">
+    <svg width="0" height="0" aria-hidden="true" focusable="false">
+      <filter id="gooey-filter">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+        <feBlend in="SourceGraphic" in2="goo" />
+      </filter>
+    </svg>
+    <a class="showcase-nav" href="./index.html">返回转盘</a>
+    <main class="showcase-stage">
+      <canvas class="showcase-canvas" aria-hidden="true"></canvas>
+      <section class="showcase-copy" aria-labelledby="showcase-title">
+        <p class="showcase-kicker">Gooey Field</p>
+        <h1 class="showcase-title" id="showcase-title">炫技</h1>
+        <p class="showcase-tagline">发光团块相互吞并、拉丝、分裂，把画面推成黏液反应场。</p>
+        <div class="showcase-badges" aria-label="效果标签">
+          <span>merge</span><span>stretch</span><span>glow</span>
+        </div>
+      </section>
+      <p class="showcase-hint">移动鼠标吸引黏液</p>
+    </main>
+    <script src="./showcase.js"></script>
+  </body>
+</html>

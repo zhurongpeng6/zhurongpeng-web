@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>液态屏 | 炫技</title>
+    <link rel="stylesheet" href="./showcase.css" />
+  </head>
+  <body class="showcase-body" data-effect="liquid">
+    <svg width="0" height="0" aria-hidden="true" focusable="false">
+      <filter id="liquid-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.028" numOctaves="2" seed="7" />
+        <feDisplacementMap in="SourceGraphic" scale="18" />
+      </filter>
+    </svg>
+    <a class="showcase-nav" href="./index.html">返回转盘</a>
+    <main class="showcase-stage">
+      <canvas class="showcase-canvas" aria-hidden="true"></canvas>
+      <section class="showcase-copy" aria-labelledby="showcase-title">
+        <p class="showcase-kicker">Liquid Glass</p>
+        <h1 class="showcase-title" id="showcase-title">炫技</h1>
+        <p class="showcase-tagline">整块屏幕像被液体玻璃折射，指针经过就产生扭曲波纹。</p>
+        <div class="showcase-badges" aria-label="效果标签">
+          <span>warp</span><span>melt</span><span>refract</span>
+        </div>
+      </section>
+      <p class="showcase-hint">移动鼠标拉扯屏幕</p>
+    </main>
+    <script src="./showcase.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>轨道环 | 炫技</title>
+    <link rel="stylesheet" href="./showcase.css" />
+  </head>
+  <body class="showcase-body" data-effect="orbit">
+    <a class="showcase-nav" href="./index.html">返回转盘</a>
+    <main class="showcase-stage">
+      <div class="orbit-system" aria-hidden="true">
+        <span class="orbit-ring" style="--rz: 0deg; --speed: 4.8s; --dot: #00e5ff"></span>
+        <span class="orbit-ring" style="--rz: 28deg; --speed: 6.4s; --dot: #ff2d78"></span>
+        <span class="orbit-ring" style="--rz: 56deg; --speed: 7.7s; --dot: #c7ff2e"></span>
+        <span class="orbit-ring" style="--rz: 84deg; --speed: 5.8s; --dot: #8f5cff"></span>
+      </div>
+      <section class="showcase-copy" aria-labelledby="showcase-title">
+        <p class="showcase-kicker">Motion Orbit</p>
+        <h1 class="showcase-title" id="showcase-title">炫技</h1>
+        <p class="showcase-tagline">发光节点沿轨道高速运行，鼠标靠近时整个系统产生磁场偏转。</p>
+        <div class="showcase-badges" aria-label="效果标签">
+          <span>orbit</span><span>magnet</span><span>rings</span>
+        </div>
+      </section>
+      <p class="showcase-hint">移动鼠标扭转轨道</p>
+    </main>
+    <script src="./showcase.js"></script>
+  </body>
+</html>

@@ -5,105 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="祝荣鹏的个人网站，记录作品、想法与在线实验。"
+      content="一个以炫技为唯一主题的前端动效转盘，进入十五种不同的酷炫动态网页风格。"
     />
-    <title>祝荣鹏 | 个人网站</title>
+    <title>炫技转盘</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="#top" aria-label="祝荣鹏主页">
-        <span>ZRP</span>
-        <strong>祝荣鹏</strong>
-      </a>
-      <nav aria-label="主导航">
-        <a href="#works">作品</a>
-        <a href="#notes">记录</a>
-        <a href="#contact">联系</a>
-      </nav>
-    </header>
+    <canvas class="portal-canvas" id="portalCanvas" aria-hidden="true"></canvas>
+    <main class="portal-shell" id="top">
+      <header class="site-header" aria-label="站点信息">
+        <a class="brand-mark" href="./index.html" aria-label="回到炫技转盘">
+          <img src="./assets/mascot-original-cool.png" alt="" />
+          <span>
+            <strong>炫技</strong>
+            <small>motion roulette</small>
+          </span>
+        </a>
+        <p class="visit-note">十五个入口，顺序固定，返回不乱</p>
+      </header>
 
-    <main id="top">
-      <section class="hero">
-        <div class="hero__copy">
-          <p class="eyebrow">zhurongpeng.xyz</p>
-          <h1>把想法做成可以被看见、被访问、被继续迭代的东西。</h1>
-          <p class="intro">
-            这里是祝荣鹏的个人网站。现在它已经从本地页面升级成在线站点，
-            接下来可以继续放作品、学习笔记、项目展示和一些有趣的小工具。
+      <section class="portal-stage" aria-labelledby="portal-title">
+        <div class="portal-copy">
+          <p class="kicker">Web effect roulette</p>
+          <h1 id="portal-title">拖动转盘，撞进十五种炫技现场。</h1>
+          <p class="lead">
+            按住圆盘任意位置拖动，松手后按力度飞旋。指针停在哪个入口，就进入哪一种极限动效页面。
+            首页背景采用 Data Drift 式引力透镜，让转盘本身成为主特效。
           </p>
-          <div class="actions">
-            <a class="button button--primary" href="#works">查看作品</a>
-            <button id="refreshButton" class="button" type="button">
-              刷新在线状态
-            </button>
+        </div>
+
+        <div class="roulette-panel">
+          <div class="roulette-cluster">
+            <div class="main-wheel-wrap">
+              <div class="pointer" aria-hidden="true"></div>
+              <div
+                class="roulette"
+                id="roulette"
+                role="application"
+                aria-label="炫技动效转盘。左右方向键旋转，回车进入当前入口。"
+                tabindex="0"
+              >
+                <div class="wheel-glow" aria-hidden="true"></div>
+                <div class="wheel" id="wheel"></div>
+                <button class="hub-button" id="enterButton" type="button">
+                  <span>进入</span>
+                  <strong id="hubLabel">炫技</strong>
+                </button>
+              </div>
+            </div>
+
+            <nav class="featured-wheel" aria-label="精选特效小转盘">
+              <a class="featured-spoke" href="./duality-distortion.html" style="--i: 0">
+                <span>01</span><strong>渐变裂像</strong>
+              </a>
+              <a class="featured-spoke" href="./cubic-gallery.html" style="--i: 1">
+                <span>02</span><strong>立方画廊</strong>
+              </a>
+              <a class="featured-spoke" href="./western-parallax.html" style="--i: 2">
+                <span>03</span><strong>荒野卷轴</strong>
+              </a>
+              <a class="featured-spoke" href="./gta6-promo.html" style="--i: 3">
+                <span>04</span><strong>GTA6 宣发</strong>
+              </a>
+              <a class="featured-spoke" href="./dither-physics.html" style="--i: 4">
+                <span>05</span><strong>物理抖动</strong>
+              </a>
+              <a class="featured-core" href="./duality-distortion.html">
+                <span>精选</span><strong>5</strong>
+              </a>
+            </nav>
           </div>
+          <p class="drag-hint" id="dragHint">拖动圆盘试试力度</p>
         </div>
 
-        <aside class="status-card" aria-label="网站在线状态">
-          <span class="pulse" aria-hidden="true"></span>
-          <p>当前状态</p>
-          <strong id="connectionStatus">正在检测</strong>
-          <small id="timeText">等待网络时间...</small>
+        <aside class="entry-preview" aria-live="polite">
+          <img id="previewImage" src="./assets/mascot-peek.png" alt="" />
+          <div>
+            <p class="kicker" id="previewMeta">当前入口</p>
+            <h2 id="previewTitle">粒子重组炫技</h2>
+            <p id="previewText">几千个亮点会炸开、逃逸、旋回，再把炫技两个字拼回屏幕中央。</p>
+            <a class="entry-link" id="previewLink" href="./particles.html">进入粒子字</a>
+          </div>
         </aside>
-      </section>
-
-      <section class="metrics" aria-label="实时信息">
-        <article>
-          <span>公网响应</span>
-          <strong id="quoteText">正在读取 GitHub API...</strong>
-        </article>
-        <article>
-          <span>访问环境</span>
-          <strong id="browserText">正在检测浏览器...</strong>
-        </article>
-        <article>
-          <span>站点方向</span>
-          <strong>个人主页 / 作品集 / 在线实验室</strong>
-        </article>
-      </section>
-
-      <section id="works" class="section">
-        <div class="section__head">
-          <p class="eyebrow">Works</p>
-          <h2>先放三个入口，后面慢慢长出来。</h2>
-        </div>
-        <div class="work-grid">
-          <article class="work-card">
-            <span>01</span>
-            <h3>在线主页</h3>
-            <p>一个真正可以通过域名访问的网站，已经接入 Vercel 与自定义域名。</p>
-          </article>
-          <article class="work-card">
-            <span>02</span>
-            <h3>学习记录</h3>
-            <p>可以用来整理编程、设计、AI 工具和项目部署过程中的经验。</p>
-          </article>
-          <article class="work-card">
-            <span>03</span>
-            <h3>小工具实验室</h3>
-            <p>以后可以加入天气、倒计时、作品墙、留言入口或者小游戏。</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="notes" class="split-section">
-        <div>
-          <p class="eyebrow">Notes</p>
-          <h2>网站不是一次完成的，它会跟着你一起更新。</h2>
-        </div>
-        <p>
-          今天先完成“能上线、能访问、能展示”的第一版。之后每次改动只要推送到
-          GitHub，Vercel 就会自动部署，网站会越来越像你自己的数字名片。
-        </p>
-      </section>
-
-      <section id="contact" class="contact">
-        <p class="eyebrow">Contact</p>
-        <h2>想放什么内容，下一版就继续加。</h2>
-        <p>
-          这个位置可以换成邮箱、QQ、微信二维码、GitHub 链接，或者你的个人介绍。
-        </p>
       </section>
     </main>
 
