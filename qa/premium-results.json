@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "1920/1440/768/390/320 layouts and image loading",
+    "on-demand rendering, scroll expansion, offscreen and simulated background pause, live reduced-motion fallback, keyboard and anchors",
+    "lab switch and experiment return; blind box draw, save, complete, reload, shelf and return",
+    "native mobile scroll and single-tap project navigation",
+    "no-JavaScript and WebGL-disabled complete fallback"
+  ],
+  "errors": [],
+  "failed": []
+}

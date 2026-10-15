@@ -17,3 +17,11 @@
 测试命令：`node qa/verify.cjs` 与 `node qa/extra.cjs`。脚本当前引用这台电脑的预装 Playwright 路径，并使用本机 Chrome；迁移电脑时需修改 require 路径并安装浏览器。主测试需要 baseline/public 中的旧文件。测试打开 file:// 页面，不依赖运行服务器。
 
 性能为同环境短时对比；rAF 频率与 60 Hz 动画更新频率不同。具体解释见根目录的优化说明。
+
+## 纯白极简版本（2026-10-15）
+
+- 当前验证脚本：`premium-verify.cjs`，依赖本地 3001 端口服务。
+- 当前结果：`premium-results.json`。
+- 页面截图：`premium-1920.png`、`premium-1440.png`、`premium-768.png`、`premium-390.png`、`premium-320.png`、`premium-scroll.png`。
+- 资源生成脚本：`premium-capture.cjs`，输出公开项目实景图和三维装置后备图。
+- 原 profile/effects 脚本和结果属于 v0.1；首页结构变化后不再用于当前版验收。
