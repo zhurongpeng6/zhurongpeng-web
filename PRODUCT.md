@@ -1,32 +1,39 @@
-# Product
+# 毛婆婆 · 个人主页
 
-## Register
+首页展示概括的研究生背景、学习状态、两个个人创意项目及运动兴趣。采用米白与低饱和绿色，只使用昵称；不公开真实姓名、学校、照片或私人联系方式。STM32 为正在学习，Linux 为计划学习，机器人与传感器为兴趣探索。
 
-brand
+## 主页互动效果
 
-## Users
+`profile-effects.js` 以渐进增强方式加入精选实验风格：首屏点阵推散回弹与立体倾斜、三个主题按钮控制的学习立方、项目封面斜向裂像、生活区分层视差。使用独立样式和共享 `Motion` 调度，不加载实验页全局样式。手机关闭指针力场与倾斜，减少动态效果模式切换为静态展示；页面隐藏、区域离屏和粒子稳定时停止持续绘制。无 JavaScript 时仍保留完整个人信息与项目链接。
 
-Visitors arrive at a personal mascot site and use the home page as a playful gateway into three themed mascot areas: eating, drinking, and playing.
+验证：`node qa/profile-effects-verify.cjs`；结果为 `qa/effects-results.json`，截图为 `qa/effects-*.png`。原有项目功能回归仍使用 `qa/profile-verify.cjs`。
 
-## Product Purpose
+## 页面入口
 
-The site presents a memorable cute mascot identity first, then lets visitors enter the mascot world through a tactile rotating hub.
+- `index.html`：个人主页，独立样式 `profile.css`。
+- `visual-lab.html`：保留的动态视觉实验室；子页返回转盘时回到此页。
+- `projects/daily-spark/index.html`：今日灵感盲盒，保留分类、抽取、收藏和完成记录。记录保存在当前网站的浏览器存储，不自动迁移旧站数据。
 
-## Brand Personality
+两个作品均标明个人创意实践与 AI 辅助实现。项目页面提供返回个人主页的入口。
 
-Cool, cute, kinetic.
+## 动态视觉实验室
 
-## Anti-references
+实验室通过可拖动的精密转盘，进入 15 个动态视觉实验；另有 5 个独立精选入口。
 
-Avoid generic portfolio grids, ordinary card menus, bland SaaS landing pages, and static mascot pages with no interaction.
+## 设计
 
-## Design Principles
+暗色、冷白、冰蓝。转盘是视觉和交互中心，吉祥物作为品牌标识；作品信息与精选导航有独立空间。使用本地字体回退，不增加外部字体依赖。
 
-- Make the mascot feel like the site host, not decoration.
-- Let the first screen behave like a toy visitors can touch.
-- Keep the three destinations clear even when their order changes.
-- Use motion for navigation feedback, with a reduced-motion fallback.
+## 交互
 
-## Accessibility & Inclusion
+- 拖动、惯性、吸附由同一套控制逻辑驱动；选中位置与内容、目标页面同步。
+- 左右方向键或前后按钮切换，回车或中心按钮进入；标签页内恢复上次选择。
+- 首页样式独立于旧互动页，各子页保留自己的视觉风格。
+- 页面隐藏时暂停持续动画。减少动态效果模式使用静态构图，滚动画廊改为可阅读列表。
+- 电脑优先；手机保留核心触控操作，降低画布分辨率与粒子密度。
 
-Use clear labels, keyboard-accessible entry buttons, readable contrast, and respect reduced-motion preferences.
+## 本地运行
+
+`npm start`，打开 http://localhost:3000 。本轮未进行公网发布。
+
+个人主页验证见 `qa/profile-results.json`，截图见 `qa/profile-*.png`。运行 `node qa/profile-verify.cjs` 使用本地文件；设置 `PREVIEW_URL` 可对本地服务执行相同检查。测试默认地址须以斜杠结尾。历史实验室测试方法、环境与结果见 `qa/README.md` 和 `优化说明.md`。

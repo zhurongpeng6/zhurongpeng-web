@@ -3,3 +3,7 @@ node_modules/
 .env
 .DS_Store
 Thumbs.db
+# Generated visual QA baseline and screenshots
+qa/baseline/
+qa/baseline.zip
+qa/*.png

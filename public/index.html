@@ -1,95 +1,30 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="一个以炫技为唯一主题的前端动效转盘，进入十五种不同的酷炫动态网页风格。"
-    />
-    <title>炫技转盘</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <canvas class="portal-canvas" id="portalCanvas" aria-hidden="true"></canvas>
-    <main class="portal-shell" id="top">
-      <header class="site-header" aria-label="站点信息">
-        <a class="brand-mark" href="./index.html" aria-label="回到炫技转盘">
-          <img src="./assets/mascot-original-cool.png" alt="" />
-          <span>
-            <strong>炫技</strong>
-            <small>motion roulette</small>
-          </span>
-        </a>
-        <p class="visit-note">十五个入口，顺序固定，返回不乱</p>
-      </header>
-
-      <section class="portal-stage" aria-labelledby="portal-title">
-        <div class="portal-copy">
-          <p class="kicker">Web effect roulette</p>
-          <h1 id="portal-title">拖动转盘，撞进十五种炫技现场。</h1>
-          <p class="lead">
-            按住圆盘任意位置拖动，松手后按力度飞旋。指针停在哪个入口，就进入哪一种极限动效页面。
-            首页背景采用 Data Drift 式引力透镜，让转盘本身成为主特效。
-          </p>
-        </div>
-
-        <div class="roulette-panel">
-          <div class="roulette-cluster">
-            <div class="main-wheel-wrap">
-              <div class="pointer" aria-hidden="true"></div>
-              <div
-                class="roulette"
-                id="roulette"
-                role="application"
-                aria-label="炫技动效转盘。左右方向键旋转，回车进入当前入口。"
-                tabindex="0"
-              >
-                <div class="wheel-glow" aria-hidden="true"></div>
-                <div class="wheel" id="wheel"></div>
-                <button class="hub-button" id="enterButton" type="button">
-                  <span>进入</span>
-                  <strong id="hubLabel">炫技</strong>
-                </button>
-              </div>
-            </div>
-
-            <nav class="featured-wheel" aria-label="精选特效小转盘">
-              <a class="featured-spoke" href="./duality-distortion.html" style="--i: 0">
-                <span>01</span><strong>渐变裂像</strong>
-              </a>
-              <a class="featured-spoke" href="./cubic-gallery.html" style="--i: 1">
-                <span>02</span><strong>立方画廊</strong>
-              </a>
-              <a class="featured-spoke" href="./western-parallax.html" style="--i: 2">
-                <span>03</span><strong>荒野卷轴</strong>
-              </a>
-              <a class="featured-spoke" href="./gta6-promo.html" style="--i: 3">
-                <span>04</span><strong>GTA6 宣发</strong>
-              </a>
-              <a class="featured-spoke" href="./dither-physics.html" style="--i: 4">
-                <span>05</span><strong>物理抖动</strong>
-              </a>
-              <a class="featured-core" href="./duality-distortion.html">
-                <span>精选</span><strong>5</strong>
-              </a>
-            </nav>
-          </div>
-          <p class="drag-hint" id="dragHint">拖动圆盘试试力度</p>
-        </div>
-
-        <aside class="entry-preview" aria-live="polite">
-          <img id="previewImage" src="./assets/mascot-peek.png" alt="" />
-          <div>
-            <p class="kicker" id="previewMeta">当前入口</p>
-            <h2 id="previewTitle">粒子重组炫技</h2>
-            <p id="previewText">几千个亮点会炸开、逃逸、旋回，再把炫技两个字拼回屏幕中央。</p>
-            <a class="entry-link" id="previewLink" href="./particles.html">进入粒子字</a>
-          </div>
-        </aside>
-      </section>
-    </main>
-
-    <script src="./app.js"></script>
-  </body>
-</html>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f7f2">
+<meta name="description" content="毛婆婆的个人主页。控制工程研究生，正在学习 STM32，对机器人与传感器方向感兴趣。记录学习、个人创意项目与运动生活。">
+<title>毛婆婆 · 学习、探索与生活</title><link rel="stylesheet" href="./profile.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到正文</a>
+<header class="site-header wrap"><a class="wordmark" href="#about"><span class="brand-symbol" aria-hidden="true">m.</span>毛婆婆<span class="wordmark-note">个人主页</span></a><nav aria-label="主导航"><a href="#about">关于</a><a href="#learning">学习</a><a href="#projects">作品</a><a href="#life">生活</a></nav></header>
+<main id="main" class="wrap">
+<section class="hero" id="about" aria-labelledby="intro-title">
+<div class="hero-copy"><p class="eyebrow"><span class="status-dot"></span>保持好奇，慢慢向前</p><h1 id="intro-title">你好，<br>我是<span class="name">毛婆婆。</span></h1><p class="intro">一名控制工程研究生。<br>正在学习 STM32，也对机器人与传感器的世界充满好奇。</p><a class="primary-link" href="#projects">看看我的作品 <span aria-hidden="true">↗</span></a><p class="hero-footnote"><span></span>在学习中探索，在生活中积蓄能量。</p></div>
+<div class="exploration" role="img" aria-label="学习、探索、生活：从一个小小的好奇开始"><div class="diagram-heading"><span>EXPLORATION NOTES</span><span>01 / 持续生长</span></div><svg viewBox="0 0 460 420" aria-hidden="true"><defs><pattern id="grid" width="23" height="23" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" fill="#b8c2b3"/></pattern></defs><rect width="460" height="420" fill="url(#grid)"/><g fill="none" stroke="#cad1c3"><circle cx="230" cy="210" r="147"/><circle cx="230" cy="210" r="103" stroke-dasharray="3 7"/><path d="M45 210H415M230 25V395"/></g><path d="M104 282L230 210 349 116M230 210L341 310" fill="none" stroke="#7f9474" stroke-width="1.5"/><g fill="#52674b"><circle cx="230" cy="210" r="58"/><circle cx="349" cy="116" r="8"/><circle cx="104" cy="282" r="6"/><circle cx="341" cy="310" r="6"/></g><path d="M209 226V194L230 211 251 194V226" fill="none" stroke="#f5f6e9" stroke-width="3" stroke-linejoin="round"/><g fill="#52674b" font-size="14"><text x="344" y="92">探索</text><text x="64" y="313">学习</text><text x="333" y="343">生活</text></g></svg><div class="diagram-footer"><span>从一个小小的好奇开始</span><span>↗</span></div></div>
+</section>
+<section id="learning" class="section" aria-labelledby="learning-title"><div class="section-heading"><div><p class="eyebrow">01 / LEARNING</p><h2 id="learning-title">学习与探索<span>一步一步，建立理解。</span></h2></div><p class="section-note">记录当下，也为下一步留白。</p></div><div class="learning-grid">
+<article class="learning-item"><span class="state">● 正在学习</span><h3>STM32</h3><p>从微控制器开始，逐步理解软硬件之间的联系。</p><span class="item-index">01</span></article>
+<article class="learning-item"><span class="state planned">计划学习</span><h3>Linux</h3><p>下一步，走近 Linux 系统，拓展自己的技术视野。</p><span class="item-index">02</span></article>
+<article class="learning-item"><span class="state exploring">兴趣探索</span><h3>机器人与传感器</h3><p>对感知与运动充满好奇，具体方向还在探索中。</p><span class="item-index">03</span></article>
+</div></section>
+<section id="projects" class="section" aria-labelledby="projects-title"><div class="section-heading"><div><p class="eyebrow">02 / SELECTED PROJECTS</p><h2 id="projects-title">把想法，做成小作品。</h2></div><p class="section-note">我提出想法、选择体验方向，<br>借助 AI 辅助实现，在尝试中迭代。</p></div><div class="project-grid">
+<a class="project-card" href="./visual-lab.html" aria-labelledby="lab-title"><div class="project-art lab-art" aria-hidden="true"><span class="art-corner">VISUAL LAB / 01</span><div class="mini-dial"><div class="mini-dial-inner"><span>EXPLORE</span><b>炫技</b><span>↗</span></div></div><span class="art-caption">转动灵感，探索交互的可能。</span><span class="art-arrow">↗</span></div><div class="project-info"><p class="project-kind">交互体验 / 视觉实验</p><h3 id="lab-title">动态视觉实验室 <span aria-hidden="true">↗</span></h3><p>转动一个转盘，走进不同的动态视觉世界。把对网页交互的好奇，变成可以亲手体验的小实验。</p><div class="project-bottom"><span>个人创意实践 · AI 辅助实现</span><span>进入实验室</span></div></div></a>
+<a class="project-card" href="./projects/daily-spark/index.html" aria-labelledby="spark-title"><div class="project-art spark-art" aria-hidden="true"><span class="art-corner">DAILY SPARK / 02</span><svg class="spark-box" viewBox="0 0 360 260"><ellipse cx="180" cy="228" rx="90" ry="10" fill="#ddd2af" opacity=".5"/><path d="M91 112L180 151 269 112V191L180 229 91 191Z" fill="#d5a35c" stroke="#987544" stroke-width="1.5"/><path d="M180 151L269 112V191L180 229Z" fill="#bd8b48"/><path d="M83 102L178 62 277 102 180 145Z" fill="#f1ce8a" stroke="#987544" stroke-width="1.5"/><path d="M83 102V119L180 161 277 119V102L180 145Z" fill="#dcb066" stroke="#987544" stroke-width="1.5"/><path d="M129 83L228 123 204 135 106 94ZM232 83L131 124 153 134 254 93ZM131 139V208L153 218V149ZM204 150V219L227 209V140Z" fill="#f9efd5"/><path d="M176 64C140 10 111 51 169 64M183 63C216 7 250 52 191 63" fill="none" stroke="#b79658" stroke-width="7" stroke-linecap="round"/><path d="M66 57V77M56 67H76M291 159V173M284 166H298" stroke="#ad915b" stroke-width="2"/><circle cx="285" cy="54" r="4" fill="#ad915b"/></svg><span class="art-caption">给平凡的一天，开一点新鲜感。</span><span class="art-arrow">↗</span></div><div class="project-info"><p class="project-kind">日常灵感 / 轻量互动</p><h3 id="spark-title">今日灵感盲盒 <span aria-hidden="true">↗</span></h3><p>抽取一份小挑战、一点创意或一个新视角。收藏喜欢的灵感，让日常多一点意外和行动。</p><div class="project-bottom"><span>个人创意实践 · AI 辅助实现</span><span>打开盲盒</span></div></div></a>
+</div></section>
+<section id="life" class="section life-section" aria-labelledby="life-title"><div><p class="eyebrow">03 / BEYOND THE SCREEN</p><h2 id="life-title">屏幕之外，<br>也保持向前。</h2><p class="life-note">跑步、骑车、健身，<br>是我学习之外喜欢的生活方式。</p></div><div class="interest-list"><div><span>01</span><h3>跑步</h3><span class="interest-en">RUNNING</span><svg viewBox="0 0 64 40" aria-hidden="true"><path d="M5 28H59M12 20L24 9 39 20 50 8"/></svg></div><div><span>02</span><h3>骑车</h3><span class="interest-en">CYCLING</span><svg viewBox="0 0 64 40" aria-hidden="true"><circle cx="14" cy="26" r="10"/><circle cx="50" cy="26" r="10"/><path d="M14 26L25 10 36 26H14M25 10H42L50 26M38 6H47"/></svg></div><div><span>03</span><h3>健身</h3><span class="interest-en">FITNESS</span><svg viewBox="0 0 64 40" aria-hidden="true"><path d="M19 20H45M13 8V32M20 12V28M44 12V28M51 8V32M7 16V24M57 16V24"/></svg></div></div></section>
+</main><footer class="site-footer wrap"><a class="footer-name" href="#about">毛婆婆<span>学习、探索与生活。</span></a><span>保持好奇，未完待续。</span><a href="#about">回到顶部 ↑</a></footer>
+<script src="./motion.js"></script>
+<script src="./profile-effects.js"></script>
+</body></html>

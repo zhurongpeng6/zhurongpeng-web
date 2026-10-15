@@ -1,15 +1,3 @@
-const roulette = document.querySelector("#roulette");
-const wheel = document.querySelector("#wheel");
-const enterButton = document.querySelector("#enterButton");
-const hubLabel = document.querySelector("#hubLabel");
-const dragHint = document.querySelector("#dragHint");
-const previewImage = document.querySelector("#previewImage");
-const previewMeta = document.querySelector("#previewMeta");
-const previewTitle = document.querySelector("#previewTitle");
-const previewText = document.querySelector("#previewText");
-const previewLink = document.querySelector("#previewLink");
-const portalCanvas = document.querySelector("#portalCanvas");
-
 const entries = [
   {
     key: "particles",
@@ -148,303 +136,103 @@ const entries = [
   }
 ];
 
-const sectorAngle = 360 / entries.length;
-let orderedEntries = [...entries];
-let rotation = Math.random() * 360;
-let activeIndex = 0;
-let dragState = null;
-let inertiaFrame = null;
-
-function shuffle(items) {
-  const copy = [...items];
-  for (let index = copy.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
-  }
-  return copy;
+const $ = (id) => document.getElementById(id);
+const roulette = $('roulette'), wheel = $('wheel');
+const sector = 360 / entries.length;
+let rotation = 0, selected = -1, drag = null, animation = 0, pending = 0;
+try { const key = sessionStorage.getItem('roulette-selection'); const i = entries.findIndex(e => e.key === key); if (i >= 0) rotation = -i * sector; } catch {}
+wheel.innerHTML = entries.map((e,i) => `<div class="dial-item" style="--angle:${i*sector}deg"><span>${String(i+1).padStart(2,'0')}</span><strong>${e.label}</strong></div>`).join('');
+const items = [...wheel.children];
+function indexAt(angle) { return ((Math.round(-angle / sector) % entries.length) + entries.length) % entries.length; }
+function paint() {
+  wheel.style.setProperty('--rotation', `${rotation}deg`);
+  const next = indexAt(rotation);
+  if (next === selected) return;
+  if (selected >= 0) items[selected].classList.remove('is-active');
+  selected = next; items[selected].classList.add('is-active');
+  const entry = entries[selected];
+  $('hubLabel').textContent = entry.label;
+  $('previewNumber').textContent = String(selected+1).padStart(2,'0');
+  $('previewMeta').textContent = entry.subtitle;
+  $('previewTitle').textContent = entry.title.replace('炫技','');
+  $('previewText').textContent = entry.text;
+  $('previewLink').href = entry.href;
+  $('enterButton').setAttribute('aria-label',`进入${entry.label}`);
 }
-
-function normalizeDegrees(value) {
-  return ((value % 360) + 360) % 360;
+function settled() {
+  rotation = ((rotation % 360) + 360) % 360; paint();
+  $('selectionStatus').textContent = `已选中${entries[selected].label}，第 ${selected+1} 项，共 15 项。`;
+  $('dragHint').textContent = '拖动探索 · 点击中心进入';
+  try { sessionStorage.setItem('roulette-selection', entries[selected].key); } catch {}
 }
-
-function getPointerAngle(event) {
-  const rect = roulette.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-  return Math.atan2(event.clientY - centerY, event.clientX - centerX) * 180 / Math.PI;
-}
-
-function shortestDelta(current, previous) {
-  let delta = current - previous;
-  if (delta > 180) delta -= 360;
-  if (delta < -180) delta += 360;
-  return delta;
-}
-
-function getSelectedIndex() {
-  const pointerAngle = 0;
-  let selected = 0;
-  let smallestDistance = Infinity;
-
-  orderedEntries.forEach((entry, index) => {
-    const itemAngle = normalizeDegrees(index * sectorAngle + rotation);
-    const distance = Math.abs(shortestDelta(itemAngle, pointerAngle));
-    if (distance < smallestDistance) {
-      smallestDistance = distance;
-      selected = index;
-    }
-  });
-
-  return selected;
-}
-
-function setRotation(value) {
-  rotation = value;
-  wheel.style.setProperty("--wheel-rotation", `${rotation}deg`);
-  wheel.querySelectorAll(".wheel-item").forEach((item) => {
-    const angle = Number(item.dataset.angle);
-    item.style.setProperty("--counter-angle", `${-(angle + rotation)}deg`);
-  });
-  updateSelection();
-}
-
-function updateSelection() {
-  activeIndex = getSelectedIndex();
-  const entry = orderedEntries[activeIndex];
-  hubLabel.textContent = entry.label;
-  previewImage.src = entry.image;
-  previewImage.alt = "";
-  previewMeta.textContent = `当前入口：${entry.subtitle}`;
-  previewTitle.textContent = entry.title;
-  previewText.textContent = entry.text;
-  previewLink.href = entry.href;
-  previewLink.textContent = `进入${entry.label}`;
-}
-
-function renderWheel() {
-  wheel.innerHTML = orderedEntries
-    .map((entry, index) => {
-      const angle = index * sectorAngle;
-      return `
-        <div class="wheel-item" style="--item-angle: ${angle}deg" data-angle="${angle}" data-key="${entry.key}">
-          <span class="wheel-icon" aria-hidden="true">${index + 1}</span>
-          <strong>${entry.label}</strong>
-          <span>${entry.subtitle}</span>
-        </div>
-      `;
-    })
-    .join("");
-  setRotation(rotation);
-}
-
-function stopInertia() {
-  if (inertiaFrame) {
-    cancelAnimationFrame(inertiaFrame);
-    inertiaFrame = null;
-  }
-}
-
-function spinWithInertia(velocity, travel) {
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reducedMotion) {
-    updateSelection();
-    return;
-  }
-
-  let speed = velocity + Math.sign(velocity || travel || 1) * Math.min(Math.abs(travel) * 0.018, 4.4);
-  let previousTime = performance.now();
-
+function stop() { cancelAnimationFrame(animation); cancelAnimationFrame(pending); animation = pending = 0; }
+function snap(target = Math.round(rotation / sector) * sector) {
+  stop(); const from = rotation; let start;
+  if (Motion.reduced || document.hidden) { rotation = target; paint(); settled(); return; }
   function tick(now) {
-    const delta = Math.min((now - previousTime) / 16.67, 2);
-    previousTime = now;
-    speed *= Math.pow(0.92, delta);
-    setRotation(rotation + speed * delta);
-
-    if (Math.abs(speed) < 0.06) {
-      inertiaFrame = null;
-      updateSelection();
-      return;
-    }
-
-    inertiaFrame = requestAnimationFrame(tick);
+    start ??= now; const t = Math.min((now-start)/340,1);
+    rotation = from + (target-from)*(1-Math.pow(1-t,4)); paint();
+    if (t<1) animation=requestAnimationFrame(tick); else { animation=0; settled(); }
   }
-
-  inertiaFrame = requestAnimationFrame(tick);
+  animation=requestAnimationFrame(tick);
 }
-
-function enterActivePage() {
-  const entry = orderedEntries[activeIndex];
-  window.location.href = entry.href;
+function inertia(velocity) {
+  if (Motion.reduced || Math.abs(velocity)<0.025) { snap(); return; }
+  let last=performance.now();
+  function tick(now) {
+    const dt=Math.min(now-last,32); last=now;
+    velocity *= Math.exp(-dt/230); rotation += velocity*dt; paint();
+    if (Math.abs(velocity)>0.018) animation=requestAnimationFrame(tick); else snap();
+  }
+  animation=requestAnimationFrame(tick);
 }
-
-function initPortalLens() {
-  if (!portalCanvas) return;
-
-  const ctx = portalCanvas.getContext("2d");
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-  let width = 0;
-  let height = 0;
-  let dpr = 1;
-  let frame = 0;
-  let nodes = [];
-
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = window.innerWidth;
-    height = window.innerHeight;
-    portalCanvas.width = Math.floor(width * dpr);
-    portalCanvas.height = Math.floor(height * dpr);
-    portalCanvas.style.width = `${width}px`;
-    portalCanvas.style.height = `${height}px`;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const count = reducedMotion ? 70 : 180;
-    nodes = Array.from({ length: count }, (_, index) => ({
-      orbit: 90 + (index % 24) * 18 + Math.random() * 40,
-      angle: Math.random() * Math.PI * 2,
-      speed: (index % 2 ? 1 : -1) * (0.0016 + Math.random() * 0.004),
-      hue: 170 + Math.random() * 170,
-      size: 0.8 + Math.random() * 2.4
-    }));
-  }
-
-  function draw() {
-    frame += 1;
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "rgba(5, 6, 14, 0.28)";
-    ctx.fillRect(0, 0, width, height);
-
-    const cx = width * 0.5 + (pointer.x - width * 0.5) * 0.035;
-    const cy = height * 0.5 + (pointer.y - height * 0.5) * 0.035;
-    const maxOrbit = Math.min(width, height) * 0.46;
-
-    const core = ctx.createRadialGradient(cx, cy, 20, cx, cy, maxOrbit);
-    core.addColorStop(0, "rgba(255,255,255,0.18)");
-    core.addColorStop(0.18, "rgba(0,229,255,0.16)");
-    core.addColorStop(0.46, "rgba(255,45,120,0.12)");
-    core.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = core;
-    ctx.beginPath();
-    ctx.arc(cx, cy, maxOrbit, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.globalCompositeOperation = "lighter";
-    for (let ring = 0; ring < 7; ring += 1) {
-      const radius = maxOrbit * (0.24 + ring * 0.105);
-      ctx.strokeStyle = `hsla(${190 + ring * 22}, 100%, 62%, ${0.18 - ring * 0.015})`;
-      ctx.lineWidth = 1 + ring * 0.2;
-      ctx.beginPath();
-      ctx.ellipse(
-        cx,
-        cy,
-        radius * (1.08 + Math.sin(frame * 0.01 + ring) * 0.06),
-        radius * (0.36 + ring * 0.035),
-        frame * 0.002 + ring * 0.42,
-        0,
-        Math.PI * 2
-      );
-      ctx.stroke();
-    }
-
-    nodes.forEach((node) => {
-      node.angle += reducedMotion ? node.speed * 0.18 : node.speed;
-      const radius = Math.min(node.orbit, maxOrbit * 0.96);
-      const x = cx + Math.cos(node.angle) * radius * 1.12;
-      const y = cy + Math.sin(node.angle) * radius * 0.48;
-      const dx = pointer.x - x;
-      const dy = pointer.y - y;
-      const pull = Math.max(0, 1 - Math.hypot(dx, dy) / 220);
-      ctx.fillStyle = `hsla(${node.hue}, 100%, ${62 + pull * 18}%, ${0.46 + pull * 0.38})`;
-      ctx.beginPath();
-      ctx.arc(x - dx * pull * 0.08, y - dy * pull * 0.08, node.size + pull * 2.6, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    ctx.globalCompositeOperation = "source-over";
-
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener("resize", resize);
-  window.addEventListener("pointermove", (event) => {
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
-  });
-  resize();
-  draw();
+function angle(e) { return Math.atan2(e.clientY-drag.cy,e.clientX-drag.cx)*180/Math.PI; }
+function delta(a,b) { return ((a-b+540)%360)-180; }
+roulette.addEventListener('pointerdown', e => {
+  if (e.target.closest('button') || e.button!==0 || !e.isPrimary || drag) return;
+  stop(); const rect=roulette.getBoundingClientRect();
+  drag={id:e.pointerId,cx:rect.left+rect.width/2,cy:rect.top+rect.height/2,time:performance.now(),velocity:0};
+  drag.angle=angle(e); roulette.setPointerCapture(e.pointerId); roulette.classList.add('is-dragging');
+  $('dragHint').textContent='松手，让灵感继续旋转';
+});
+roulette.addEventListener('pointermove',e=>{
+  if (!drag || drag.id!==e.pointerId) return;
+  const now=performance.now(), a=angle(e), d=delta(a,drag.angle), dt=Math.max(1,now-drag.time);
+  drag.velocity=drag.velocity*.35+Math.max(-1.6,Math.min(1.6,d/dt))*.65;
+  drag.angle=a; drag.time=now; rotation+=d;
+  if (!pending) pending=requestAnimationFrame(()=>{pending=0;paint();});
+});
+function release(e,cancelled=false) {
+  if (!drag || drag.id!==e.pointerId) return;
+  const velocity=performance.now()-drag.time>90?0:drag.velocity;
+  drag=null; roulette.classList.remove('is-dragging'); stop(); paint();
+  if(roulette.hasPointerCapture(e.pointerId)) roulette.releasePointerCapture(e.pointerId);
+  if(cancelled) snap(); else inertia(velocity);
 }
-
-roulette.addEventListener("pointerdown", (event) => {
-  if (event.target.closest("button")) return;
-  stopInertia();
-  roulette.setPointerCapture(event.pointerId);
-  roulette.classList.add("is-dragging");
-
-  dragState = {
-    pointerId: event.pointerId,
-    lastAngle: getPointerAngle(event),
-    lastTime: performance.now(),
-    velocity: 0,
-    travel: 0
-  };
-
-  dragHint.textContent = "继续拖动，松手后转盘会按力度飞旋";
+roulette.addEventListener('pointerup',e=>release(e));
+roulette.addEventListener('pointercancel',e=>release(e,true));
+roulette.addEventListener('lostpointercapture',e=>release(e,true));
+function step(direction) { if(drag) return; snap(Math.round(rotation/sector)*sector+direction*sector); }
+function enter() { if(drag) return; stop(); paint(); settled(); location.href=entries[selected].href; }
+roulette.addEventListener('keydown',e=>{
+  if(e.target.closest('button')) return;
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();step(e.key==='ArrowLeft'?1:-1);}
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();enter();}
 });
-
-roulette.addEventListener("pointermove", (event) => {
-  if (!dragState || dragState.pointerId !== event.pointerId) return;
-
-  const currentAngle = getPointerAngle(event);
-  const now = performance.now();
-  const delta = shortestDelta(currentAngle, dragState.lastAngle);
-  const elapsed = Math.max(now - dragState.lastTime, 16);
-
-  dragState.velocity = delta / elapsed * 16.67;
-  dragState.travel += delta;
-  dragState.lastAngle = currentAngle;
-  dragState.lastTime = now;
-
-  setRotation(rotation + delta);
-});
-
-roulette.addEventListener("pointerup", (event) => {
-  if (!dragState || dragState.pointerId !== event.pointerId) return;
-
-  const finalVelocity = dragState.velocity;
-  const finalTravel = dragState.travel;
-  dragState = null;
-  roulette.classList.remove("is-dragging");
-  dragHint.textContent = "停下后点击中心进入当前炫技页";
-  spinWithInertia(finalVelocity, finalTravel);
-});
-
-roulette.addEventListener("pointercancel", () => {
-  dragState = null;
-  roulette.classList.remove("is-dragging");
-  updateSelection();
-});
-
-roulette.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") {
-    event.preventDefault();
-    stopInertia();
-    setRotation(rotation - sectorAngle);
-  }
-
-  if (event.key === "ArrowRight") {
-    event.preventDefault();
-    stopInertia();
-    setRotation(rotation + sectorAngle);
-  }
-
-  if (event.key === "Enter" || event.key === " ") {
-    event.preventDefault();
-    enterActivePage();
-  }
-});
-
-enterButton.addEventListener("click", enterActivePage);
-previewLink.addEventListener("click", () => stopInertia());
-
-renderWheel();
-initPortalLens();
+$('previousButton').addEventListener('click',()=>step(1));
+$('nextButton').addEventListener('click',()=>step(-1));
+$('enterButton').addEventListener('click',enter);
+$('previewLink').addEventListener('click',()=>{stop();settled();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();drag=null;roulette.classList.remove('is-dragging');snap();}});
+window.addEventListener('resize',Motion.batch(()=>{if(drag){drag=null;roulette.classList.remove('is-dragging');snap();}}));
+paint(); settled();
+// A quiet orbital field. No gradients or full-screen blur are rebuilt per frame.
+const canvas=$('portalCanvas'),ctx=canvas.getContext('2d');
+if(ctx){
+ let w=0,h=0,t=0;
+ function size(){w=innerWidth;h=innerHeight;canvas.width=w*Motion.dpr;canvas.height=h*Motion.dpr;ctx.setTransform(Motion.dpr,0,0,Motion.dpr,0,0);draw(0);}
+ function draw(dt){t+=dt*.000045;ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(145,209,226,.075)';ctx.lineWidth=1;
+ for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(w*.57,h*.48,Math.min(w*.38,650)+i*50,140+i*36,-.38+i*.16,0,Math.PI*2);ctx.stroke();}
+ for(let i=0;i<(Motion.compact?16:36);i++){const a=i*2.399+t*(i%2?1:-1),r=160+(i%9)*42;ctx.fillStyle=`rgba(163,225,241,${.12+(i%4)*.05})`;ctx.beginPath();ctx.arc(w*.57+Math.cos(a)*r,h*.48+Math.sin(a)*r*.47,1,0,Math.PI*2);ctx.fill();}}
+ size();window.addEventListener('resize',Motion.batch(size));Motion.loop(draw);
+}

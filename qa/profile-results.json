@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "1440/1920/390/320 layouts, keyboard focus, anchors, reduced motion",
+    "lab buttons, keyboard, drag, experiment return, profile return",
+    "spark categories, draw, save, complete, reload persistence, shelf, return",
+    "26 HTML pages and local navigation links; no script errors"
+  ],
+  "errors": []
+}

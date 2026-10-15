@@ -1,5 +1,6 @@
 const pageType = document.body.dataset.featured;
-const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let reduced = Motion.reduced;
+matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", () => { reduced=Motion.reduced; });
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -7,7 +8,8 @@ function clamp(value, min, max) {
 
 function initDistortion() {
   document.querySelectorAll(".duality-card").forEach((card) => {
-    card.addEventListener("pointermove", (event) => {
+    card.addEventListener("pointermove", Motion.batch((event) => {
+      if (Motion.reduced) return;
       const rect = card.getBoundingClientRect();
       const x = ((event.clientX - rect.left) / rect.width) * 100;
       const y = ((event.clientY - rect.top) / rect.height) * 100;
@@ -16,7 +18,7 @@ function initDistortion() {
       card.style.setProperty("--y", `${y}%`);
       card.style.setProperty("--tilt-y", `${(x - 50) * 0.14}deg`);
       card.style.setProperty("--tilt-x", `${(50 - y) * 0.1}deg`);
-    });
+    }));
 
     card.addEventListener("pointerleave", () => {
       card.style.setProperty("--split", "50%");
@@ -27,37 +29,36 @@ function initDistortion() {
 }
 
 function initScrollVars() {
+  const cards = [...document.querySelectorAll(".parallax-card")];
   const update = () => {
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const progress = clamp(window.scrollY / max, 0, 1);
     document.documentElement.style.setProperty("--cube-progress", progress.toFixed(4));
     document.documentElement.style.setProperty("--para-progress", progress.toFixed(4));
-    document.querySelectorAll(".parallax-card").forEach((card, index) => {
+    cards.forEach((card, index) => {
       const local = (progress * 5 - index) * 60;
       card.style.setProperty("--shift", `${clamp(local, -90, 90)}px`);
     });
   };
 
   update();
-  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("scroll", Motion.batch(update), { passive: true });
 }
 
 function initGta() {
-  const card = document.querySelector(".gta-card");
-  if (!card) return;
-
-  window.addEventListener("pointermove", (event) => {
-    const x = event.clientX / window.innerWidth - 0.5;
-    const y = event.clientY / window.innerHeight - 0.5;
-    card.style.setProperty("--gta-ry", `${x * 18}deg`);
-    card.style.setProperty("--gta-rx", `${y * -12}deg`);
-  });
+  const card = document.querySelector('.gta-card'); if (!card) return;
+  window.addEventListener('pointermove', Motion.batch(event => {
+    if (Motion.reduced) return;
+    card.style.setProperty('--gta-ry', `${(event.clientX / innerWidth - .5) * 18}deg`);
+    card.style.setProperty('--gta-rx', `${(event.clientY / innerHeight - .5) * -12}deg`);
+  }), {passive:true});
 }
 
 function initDitherPhysics() {
   const canvas = document.querySelector(".dither-canvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
+  if (!ctx) return;
   const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
   let width = 0;
   let height = 0;
@@ -66,7 +67,7 @@ function initDitherPhysics() {
   let frame = 0;
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Motion.dpr;
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = Math.floor(width * dpr);
@@ -74,7 +75,7 @@ function initDitherPhysics() {
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const step = width < 720 ? 18 : 14;
+    const step = width < 720 ? 24 : 20;
     dots = [];
     for (let y = -step; y < height + step; y += step) {
       for (let x = -step; x < width + step; x += step) {
@@ -92,8 +93,8 @@ function initDitherPhysics() {
     }
   }
 
-  function draw() {
-    frame += 1;
+  function draw(dt = 16.67) {
+    frame += dt / (1000 / 60);
     ctx.fillStyle = "rgba(5,5,7,0.32)";
     ctx.fillRect(0, 0, width, height);
 
@@ -118,16 +119,16 @@ function initDitherPhysics() {
       ctx.fill();
     });
 
-    requestAnimationFrame(draw);
+
   }
 
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", Motion.batch(() => { resize(); if (Motion.reduced) draw(0); }));
   window.addEventListener("pointermove", (event) => {
     pointer.x = event.clientX;
     pointer.y = event.clientY;
   });
   resize();
-  draw();
+  Motion.loop(draw);
 }
 
 if (pageType === "distortion") initDistortion();

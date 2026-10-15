@@ -1,0 +1,11 @@
+{
+  "errors": [],
+  "checks": [
+    "mobile CDP touch drag + snap",
+    "mobile scroll outside dial",
+    "pointer cancel",
+    "lost pointer capture",
+    "reduced reveal and SVG visible",
+    "reduced galleries screenshots"
+  ]
+}

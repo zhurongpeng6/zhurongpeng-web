@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="转动灵感，探索十五种动态视觉与五个精选实验。">
+<title>炫技 — 动态视觉实验室</title>
+<link rel="stylesheet" href="./home.css">
+<link rel="stylesheet" href="./motion.css">
+</head>
+<body class="portal-home">
+<canvas id="portalCanvas" aria-hidden="true">
+</canvas>
+<div class="home-shell">
+<header class="site-header">
+<a class="brand" href="./visual-lab.html">
+<img src="./assets/mascot-original-cool.png" width="36" height="36" alt="">
+<strong>炫技<span>VISUAL LAB</span>
+</strong>
+</a>
+<a href="./index.html" class="header-link">← 毛婆婆的主页</a><span class="header-note">
+<i>
+</i> 无限灵感，随手发生</span>
+<a class="header-link" href="#featured">精选实验 <span>↗</span>
+</a>
+</header>
+<main>
+<section class="hero" aria-labelledby="portal-title">
+<div class="intro">
+<p class="eyebrow">MOTION ROULETTE / VOL. 01</p>
+<h1 id="portal-title">让灵感，<br>转起来<span>。</span>
+</h1>
+<p class="intro-text">十五种动态视觉，一次意外相遇。<br>轻轻转动，进入下一个想象。</p>
+<div class="intro-rule">
+</div>
+<p class="small-note">DRAG TO EXPLORE<br>
+<span>每一次停留，都是新的入口</span>
+</p>
+</div>
+<div class="dial-panel">
+<div class="dial-frame">
+<div class="dial-marker" aria-hidden="true">
+</div>
+<div class="dial" id="roulette" tabindex="0" role="group" aria-label="动效转盘，左右方向键切换，回车进入" aria-describedby="dragHint">
+<div class="dial-scale" aria-hidden="true">
+</div>
+<div id="wheel" class="dial-wheel">
+</div>
+<div class="dial-inner" aria-hidden="true">
+</div>
+<button id="enterButton" class="hub" type="button">
+<span>EXPLORE</span>
+<strong id="hubLabel">粒子字</strong>
+<span class="hub-arrow">↗</span>
+</button>
+</div>
+<span class="axis axis-left" aria-hidden="true">270</span>
+<span class="axis axis-right" aria-hidden="true">090</span>
+</div>
+<div class="dial-controls">
+<button id="previousButton" type="button" aria-label="上一个效果">←</button>
+<p id="dragHint">拖动探索 · 点击中心进入</p>
+<button id="nextButton" type="button" aria-label="下一个效果">→</button>
+</div>
+</div>
+<aside class="preview">
+<div class="preview-top">
+<span>当前频率</span>
+<span>
+<b id="previewNumber">01</b> / 15</span>
+</div>
+<div class="signal" aria-hidden="true">
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+<span>
+</span>
+</div>
+<p id="previewMeta" class="eyebrow">Particle Type</p>
+<h2 id="previewTitle">粒子重组</h2>
+<p id="previewText" class="preview-text">
+</p>
+<a id="previewLink" class="entry-link" href="./particles.html">进入这个世界 <span>↗</span>
+</a>
+<p class="preview-foot">INTERACTIVE EXPERIENCE</p>
+</aside>
+</section>
+<section id="featured" class="featured" aria-labelledby="featuredTitle">
+<div class="section-heading">
+<h2 id="featuredTitle">精选实验 <span>SELECTED / 05</span>
+</h2>
+<p>把想象，再推远一点。</p>
+</div>
+<nav class="featured-list" aria-label="精选特效">
+<a href="./duality-distortion.html">
+<span class="feature-index">01</span>
+<div>
+<strong>渐变裂像</strong>
+<small>DUALITY DISTORTION</small>
+</div>
+<span class="feature-arrow">↗</span>
+</a>
+<a href="./cubic-gallery.html">
+<span class="feature-index">02</span>
+<div>
+<strong>立方画廊</strong>
+<small>CUBIC GALLERY</small>
+</div>
+<span class="feature-arrow">↗</span>
+</a>
+<a href="./western-parallax.html">
+<span class="feature-index">03</span>
+<div>
+<strong>荒野卷轴</strong>
+<small>WESTERN PARALLAX</small>
+</div>
+<span class="feature-arrow">↗</span>
+</a>
+<a href="./gta6-promo.html">
+<span class="feature-index">04</span>
+<div>
+<strong>GTA6 宣发</strong>
+<small>VICE CITY LIGHTS</small>
+</div>
+<span class="feature-arrow">↗</span>
+</a>
+<a href="./dither-physics.html">
+<span class="feature-index">05</span>
+<div>
+<strong>物理抖动</strong>
+<small>DITHER PHYSICS</small>
+</div>
+<span class="feature-arrow">↗</span>
+</a>
+</nav>
+</section>
+</main>
+<footer>
+<span>炫技 · 用交互打开想象</span>
+<span>DESIGNED TO BE FELT.</span>
+</footer>
+</div>
+<p id="selectionStatus" class="sr-only" role="status" aria-live="polite">
+</p>
+<script src="./motion.js">
+</script>
+<script src="./app.js">
+</script>
+</body>
+</html>

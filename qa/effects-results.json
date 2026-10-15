@@ -1,0 +1,14 @@
+{
+  "checks": [
+    "1440/1920/390/320 layouts",
+    "pointer tilt and reset, particles active and settled",
+    "rapid cube selection and keyboard Enter",
+    "both split covers and pointer cancellation",
+    "scroll parallax",
+    "live reduced-motion and restoration",
+    "native touch scroll, cube and project link",
+    "blur and simulated hidden-state pause",
+    "no-JavaScript learning and project content"
+  ],
+  "errors": []
+}

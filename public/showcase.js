@@ -2,7 +2,7 @@ const body = document.body;
 const effect = body.dataset.effect;
 const stage = document.querySelector(".showcase-stage");
 const canvas = document.querySelector(".showcase-canvas");
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let reducedMotion = Motion.reduced;
 
 const pointer = {
   x: window.innerWidth / 2,
@@ -39,7 +39,7 @@ function setPointerVars(x, y) {
 
 function resizeCanvas() {
   if (!canvas) return;
-  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  dpr = Motion.dpr;
   width = window.innerWidth;
   height = window.innerHeight;
   canvas.width = Math.floor(width * dpr);
@@ -47,7 +47,7 @@ function resizeCanvas() {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
   ctx = canvas.getContext("2d");
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 
 function clear(alpha = 1) {
@@ -93,10 +93,11 @@ function makeTextParticles() {
 
   const cap = reducedMotion ? 900 : width < 700 ? 1400 : 2800;
   particles = next.slice(0, cap);
+  if (Motion.reduced) particles.forEach(p => { p.x=p.tx; p.y=p.ty; p.vx=p.vy=0; });
 }
 
 function initLiquid() {
-  particles = Array.from({ length: reducedMotion ? 28 : 90 }, () => ({
+  particles = Array.from({ length: Motion.compact ? 24 : 48 }, () => ({
     x: rand(0, width),
     y: rand(0, height),
     vx: rand(-0.8, 0.8),
@@ -107,7 +108,7 @@ function initLiquid() {
 }
 
 function initGooey() {
-  blobs = Array.from({ length: reducedMotion ? 7 : 18 }, (_, index) => ({
+  blobs = Array.from({ length: Motion.compact ? 7 : 14 }, (_, index) => ({
     x: rand(width * 0.15, width * 0.85),
     y: rand(height * 0.18, height * 0.82),
     vx: rand(-1.4, 1.4),
@@ -118,7 +119,7 @@ function initGooey() {
 }
 
 function initTunnel() {
-  stars = Array.from({ length: reducedMotion ? 240 : 760 }, () => ({
+  stars = Array.from({ length: Motion.compact ? 240 : 600 }, () => ({
     x: rand(-1, 1),
     y: rand(-1, 1),
     z: rand(0.1, 1),
@@ -450,9 +451,10 @@ function drawTerminalRain() {
   });
 }
 
-function draw() {
+function draw(dt = 16.67) {
+  reducedMotion = Motion.reduced;
   if (!ctx) return;
-  frame += 1;
+  frame += dt / (1000 / 60);
   pointer.px += (pointer.x - pointer.px) * 0.32;
   pointer.py += (pointer.y - pointer.py) * 0.32;
 
@@ -466,7 +468,7 @@ function draw() {
   else if (effect === "terrain") drawTerrain();
   else if (effect === "terminal") drawTerminalRain();
 
-  requestAnimationFrame(draw);
+
 }
 
 function updateScrollCinema() {
@@ -489,41 +491,28 @@ function initTerminal() {
     "render: 炫技 炫技 炫技",
     "status: impossible-looking page stabilized"
   ];
-  let index = 0;
-  let lineIndex = 0;
-
-  function typeTick() {
-    typed.textContent = command.slice(0, index);
-    index += 1;
-
-    if (index <= command.length) {
-      setTimeout(typeTick, reducedMotion ? 42 : 24);
-      return;
-    }
-
-    const next = lines[lineIndex % lines.length];
-    output.textContent = `> ${next}`;
-    lineIndex += 1;
-    setTimeout(() => {
-      index = 0;
-      typeTick();
-    }, reducedMotion ? 1400 : 760);
-  }
-
-  typeTick();
+  let elapsed = 0;
+  Motion.loop(dt => {
+    if (Motion.reduced) { typed.textContent=command; output.textContent='> '+lines[0]; return; }
+    elapsed += dt;
+    const cycle = command.length * 24 + 1000;
+    const phase = elapsed % cycle;
+    typed.textContent = command.slice(0, Math.floor(phase / 24));
+    output.textContent = '> ' + lines[Math.floor(elapsed / cycle) % lines.length];
+  });
 }
 
-window.addEventListener("pointermove", (event) => {
-  pointer.x = event.clientX;
-  pointer.y = event.clientY;
+const updatePointer = Motion.batch(() => {
+  if (Motion.reduced) return;
   setPointerVars(pointer.x, pointer.y);
-  if (effect === "orbit") {
-    const x = (event.clientX / window.innerWidth - 0.5) * 22;
-    const y = (event.clientY / window.innerHeight - 0.5) * -18;
-    document.documentElement.style.setProperty("--orbit-tilt-x", `${y}deg`);
-    document.documentElement.style.setProperty("--orbit-tilt-y", `${x}deg`);
+  if (effect === 'orbit') {
+    document.documentElement.style.setProperty('--orbit-tilt-x', `${(pointer.y / innerHeight - .5) * -18}deg`);
+    document.documentElement.style.setProperty('--orbit-tilt-y', `${(pointer.x / innerWidth - .5) * 22}deg`);
   }
 });
+window.addEventListener('pointermove', event => {
+  pointer.x = event.clientX; pointer.y = event.clientY; updatePointer();
+}, {passive:true});
 
 window.addEventListener("pointerdown", (event) => {
   pointer.down = true;
@@ -534,16 +523,26 @@ window.addEventListener("pointerup", () => {
   pointer.down = false;
 });
 
-window.addEventListener("resize", () => {
-  initEffect();
-});
+window.addEventListener("resize", Motion.batch(() => {
+  initEffect(); if (Motion.reduced) draw(0);
+}));
 
-window.addEventListener("scroll", updateScrollCinema, { passive: true });
+window.addEventListener("scroll", Motion.batch(updateScrollCinema), { passive: true });
 
 setPointerVars(pointer.x, pointer.y);
 if (canvas) {
   initEffect();
-  draw();
+  Motion.loop(draw);
 }
 initTerminal();
 updateScrollCinema();
+
+window.addEventListener('pointercancel', () => { pointer.down=false; });
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', () => {
+  reducedMotion=Motion.reduced;
+  if (canvas) { initEffect(); if (Motion.reduced) draw(0); }
+  if (Motion.reduced) {
+    document.documentElement.style.setProperty('--orbit-tilt-x','0deg');
+    document.documentElement.style.setProperty('--orbit-tilt-y','0deg');
+  }
+});

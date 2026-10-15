@@ -1,0 +1,81 @@
+{
+  "browser": "154.0.8037.98",
+  "errors": [],
+  "layouts": [
+    {
+      "width": 1440,
+      "overflow": false,
+      "overlap": false
+    },
+    {
+      "width": 1920,
+      "overflow": false,
+      "overlap": false
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "overlap": false
+    }
+  ],
+  "routes": [
+    "particles.html",
+    "liquid.html",
+    "gooey.html",
+    "kinetic.html",
+    "glitch.html",
+    "tunnel.html",
+    "trail.html",
+    "terrain.html",
+    "scroll-cinema.html",
+    "draw.html",
+    "prism.html",
+    "terminal.html",
+    "morph.html",
+    "reveal.html",
+    "orbit.html",
+    "duality-distortion.html",
+    "cubic-gallery.html",
+    "western-parallax.html",
+    "gta6-promo.html",
+    "dither-physics.html"
+  ],
+  "performance": {
+    "before:index.html": {
+      "fps": 113,
+      "p95ms": 16.5,
+      "taskMs": 521
+    },
+    "before:particles.html": {
+      "fps": 119,
+      "p95ms": 8.5,
+      "taskMs": 1433
+    },
+    "before:dither-physics.html": {
+      "fps": 118,
+      "p95ms": 8.5,
+      "taskMs": 1339
+    },
+    "after:index.html": {
+      "fps": 120,
+      "p95ms": 8.6,
+      "taskMs": 193
+    },
+    "after:particles.html": {
+      "fps": 120,
+      "p95ms": 8.5,
+      "taskMs": 1066
+    },
+    "after:dither-physics.html": {
+      "fps": 120,
+      "p95ms": 8.5,
+      "taskMs": 719
+    }
+  },
+  "checks": [
+    "keyboard enter + return restoration",
+    "inertia interruption, reverse drag, snap consistency",
+    "legacy rooms drag interactions",
+    "reduced motion static, live preference change, simulated visibility pause/resume"
+  ]
+}
