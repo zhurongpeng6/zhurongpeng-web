@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:,">
+<meta name="description" content="毛婆婆的屏幕之外：跑步、骑车、健身，以及一堆热梗与名场面。">
+<title>屏幕之外 — 毛婆婆</title>
+<style>
+  /* Sketch Style（StyleKit spec）：奶油纸 + 铅笔灰；虚线/歪斜边框、卡片微倾斜、
+     交叉排线阴影（不模糊）；彩铅四色点缀；150–200ms 短反馈；手写体标题 + 衬线正文 */
+  :root{
+    --color-pencil:#2c2c2c;--color-paper:#f5f0e8;--color-vermilion:#e74c3c;--color-lake-blue:#3498db;--color-grass:#27ae60;--color-amber:#f39c12;
+    --font-hand:'Comic Sans MS','Segoe Script','KaiTi','楷体',cursive;
+    --font-body:Georgia,'Songti SC','SimSun',serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--color-paper);color:var(--color-pencil);font-family:var(--font-body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg,transparent 0 31px,rgba(44,44,44,.05) 31px 32px)}
+  a{color:var(--color-lake-blue);text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:2px dashed var(--color-vermilion);outline-offset:4px}
+  ::selection{background:rgba(243,156,18,.4)}
+  .wrap{width:min(1080px,calc(100% - 48px));margin-inline:auto}
+  .hand{font-family:var(--font-hand)}
+  /* 顶栏 */
+  .top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 0}
+  .top .sig{font-family:var(--font-hand);font-size:22px;font-weight:700}
+  .sketch-btn{display:inline-flex;align-items:center;min-height:44px;padding:12px 32px;border:2px dashed var(--color-pencil);border-radius:2px;background:transparent;color:var(--color-pencil);font-family:var(--font-body);font-style:italic;font-weight:700;letter-spacing:.1em;box-shadow:4px 4px 0 rgba(44,44,44,.15);cursor:pointer;transition:all .18s ease-out}
+  .sketch-btn:hover{background:var(--color-pencil);color:var(--color-paper);box-shadow:6px 6px 0 rgba(44,44,44,.2);transform:translateY(-4px) rotate(1deg)}
+  .sketch-btn:active{transform:translate(4px,4px) rotate(-2deg);box-shadow:none}
+  /* 首屏 */
+  .hero{padding-top:48px;position:relative}
+  .hero .kicker{font-family:var(--font-hand);font-size:18px;letter-spacing:.1em;color:var(--color-vermilion)}
+  h1{margin:8px 0 0;font-family:var(--font-hand);font-size:clamp(40px,6vw,56px);line-height:1.15;font-weight:700}
+  h1 .u{background:linear-gradient(transparent 62%,rgba(243,156,18,.5) 62% 92%,transparent 92%)}
+  .hero p{margin:16px 0 0;font-size:18px;max-width:40em}
+  .hero .doodle{position:absolute;right:0;top:24px;width:180px;height:120px;stroke:var(--color-pencil);fill:none;stroke-width:2;stroke-linecap:round;opacity:.75}
+  /* 卡片：微倾斜 + 排线阴影 */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+  .card{position:relative;background:#fbf7ef;border:2px dashed var(--color-pencil);border-radius:2px;padding:32px;transform:rotate(-.6deg);transition:transform .18s ease-out;
+    background-image:repeating-linear-gradient(45deg,rgba(44,44,44,.06) 0 2px,transparent 2px 7px);background-clip:padding-box}
+  .card:nth-child(2){transform:rotate(.5deg)}
+  .card:nth-child(3){transform:rotate(-.3deg)}
+  .card:hover{transform:rotate(0)}
+  .card::after{content:"";position:absolute;left:8px;right:-7px;top:8px;bottom:-7px;z-index:-1;border-radius:2px;
+    background:repeating-linear-gradient(45deg,rgba(44,44,44,.18) 0 1px,transparent 1px 5px)}
+  .card svg{width:100%;height:110px;fill:none;stroke:var(--color-pencil);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:16px}
+  .card h2{margin:0;font-family:var(--font-hand);font-size:28px;line-height:1.25;font-weight:700}
+  .card .en{font-family:var(--font-hand);font-size:18px;letter-spacing:.1em;color:var(--color-lake-blue)}
+  .card p{margin:12px 0 0}
+  .card .quip{margin:12px 0 0;font-family:var(--font-hand);font-size:18px;color:var(--color-vermilion)}
+  .tape{position:absolute;top:-12px;left:50%;translate:-50% 0;width:96px;height:24px;background:rgba(243,156,18,.35);transform:rotate(-2deg);border-left:2px dotted rgba(44,44,44,.2);border-right:2px dotted rgba(44,44,44,.2)}
+  /* 区块标题 */
+  .section{padding-top:96px}
+  .section h2{margin:0;font-family:var(--font-hand);font-size:40px;line-height:1.2;font-weight:700}
+  .section .sub{margin:8px 0 0;font-size:18px;color:#5a5a5a}
+  .section .arrow{font-family:var(--font-hand);color:var(--color-vermilion);font-size:22px}
+  /* 名场面：拍立得 */
+  .scenes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+  .polaroid{background:#fff;border:2px solid rgba(44,44,44,.25);padding:16px 16px 20px;transform:rotate(1deg);transition:transform .18s ease-out;box-shadow:6px 6px 0 rgba(44,44,44,.12)}
+  .polaroid:nth-child(2n){transform:rotate(-1.2deg)}
+  .polaroid:hover{transform:rotate(0) translateY(-4px)}
+  .polaroid .ph{height:120px;border:2px dashed rgba(44,44,44,.35);display:grid;place-items:center;font-size:44px;background:repeating-linear-gradient(-45deg,rgba(52,152,219,.06) 0 3px,transparent 3px 9px)}
+  .polaroid h3{margin:12px 0 0;font-family:var(--font-hand);font-size:22px;font-weight:700}
+  .polaroid p{margin:8px 0 0;font-size:14px;line-height:1.6;color:#5a5a5a}
+  .polaroid .stamp{display:inline-block;margin-top:8px;font-family:var(--font-hand);font-size:14px;color:var(--color-grass);border:2px solid var(--color-grass);border-radius:40% 60% 70% 30%;padding:2px 10px;transform:rotate(-3deg)}
+  /* 梗贴纸 */
+  .memes{display:flex;flex-wrap:wrap;gap:16px;margin-top:48px}
+  .meme{font-family:var(--font-hand);font-size:18px;padding:10px 18px;border:2px dashed var(--color-pencil);border-radius:40% 60% 70% 30%/50% 40% 60% 50%;background:#fbf7ef;transform:rotate(-1deg);transition:transform .15s ease-out;cursor:default}
+  .meme:nth-child(2n){transform:rotate(1.4deg);border-color:var(--color-lake-blue);color:var(--color-lake-blue)}
+  .meme:nth-child(3n){border-color:var(--color-vermilion);color:var(--color-vermilion)}
+  .meme:nth-child(5n){border-color:var(--color-grass);color:var(--color-grass)}
+  .meme:hover{transform:rotate(0) scale(1.06)}
+  /* 想玩清单 */
+  .todo{margin-top:48px;display:grid;gap:16px;max-width:640px}
+  .todo li{list-style:none;display:flex;gap:12px;align-items:baseline;font-size:18px}
+  .todo .box{flex:none;width:20px;height:20px;border:2px dashed var(--color-pencil);border-radius:2px;position:relative;top:3px}
+  .todo li.done .box{border-style:solid;border-color:var(--color-grass)}
+  .todo li.done .box::after{content:"✓";position:absolute;left:1px;top:-6px;color:var(--color-grass);font-family:var(--font-hand);font-size:22px;transform:rotate(-6deg)}
+  .todo li.done{color:#8a8a8a;text-decoration:line-through wavy rgba(231,76,60,.6) 2px}
+  .margin-note{font-family:var(--font-hand);color:var(--color-vermilion);font-size:18px;transform:rotate(-2deg);display:inline-block;margin-top:24px}
+  footer{margin-top:96px;padding:32px 0 48px;border-top:2px dashed var(--color-pencil);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--font-hand);font-size:18px}
+  @media (max-width:900px){.grid,.scenes{grid-template-columns:1fr}.hero .doodle{display:none}.section{padding-top:64px}}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card,.polaroid,.meme{transform:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><span class="sig">毛婆婆 ·  sketchbook</span><a class="sketch-btn" href="./index.html">← 返回研究</a></header>
+
+  <section class="hero">
+    <svg class="doodle" viewBox="0 0 180 120" aria-hidden="true"><path d="M12 90q30-50 60-18t60-40"/><path d="M20 104q40-30 78-12t70-30" stroke-dasharray="6 5"/><circle cx="150" cy="26" r="10"/><path d="M146 22l8 8M154 22l-8 8"/></svg>
+    <span class="kicker">screen off · 屏幕之外</span>
+    <h1>保持向前，<br><span class="u">也在屏幕之外。</span></h1>
+    <p>跑步、骑车、健身。在运动里，找到自己的节奏。代码要闭环，生活也要——多巴胺就是最稳的反馈信号。</p>
+  </section>
+
+  <div class="grid">
+    <article class="card"><span class="tape" aria-hidden="true"></span>
+      <svg viewBox="0 0 260 130" aria-hidden="true"><path d="M10 110Q80 20 150 65T270 25M10 95Q80 5 150 50T270 10M10 125Q80 35 150 80T270 40"/></svg>
+      <h2>跑步</h2><span class="en">RUNNING</span>
+      <p>不追配速，追风。耳机里放《强风吹拂》的 BGM，五公里也能跑出箱根驿传的气势。</p>
+      <p class="quip">「跑步的时候，我在想什么？」——在想终点的小卖部。</p>
+    </article>
+    <article class="card"><span class="tape" aria-hidden="true"></span>
+      <svg viewBox="0 0 260 130" aria-hidden="true"><circle cx="65" cy="82" r="32"/><circle cx="195" cy="82" r="32"/><path d="M65 82L103 25 151 82H65M103 25H168L195 82M160 16H188"/></svg>
+      <h2>骑车</h2><span class="en">CYCLING</span>
+      <p>两个轮子的自由。上坡骂骂咧咧，下坡真香定律；海风一吹，什么 bug 都先挂起。</p>
+      <p class="quip">碳架买不起，铝架也快乐。</p>
+    </article>
+    <article class="card"><span class="tape" aria-hidden="true"></span>
+      <svg viewBox="0 0 260 130" aria-hidden="true"><path d="M75 65H185M60 30V100M80 40V90M180 40V90M200 30V100M45 52V78M215 52V78"/></svg>
+      <h2>健身</h2><span class="en">FITNESS</span>
+      <p>渐进超负荷，和调 PID 一个道理：慢慢加量，别振荡。力竭那一刻，表情管理直接下线。</p>
+      <p class="quip">耶巴蒂！莱维贝贝！</p>
+    </article>
+  </div>
+
+  <section class="section">
+    <h2>名场面收藏夹 <span class="arrow">↷</span></h2>
+    <p class="sub">那些让我「DNA 动了」的瞬间，全部手绘存档（画得不像，但感情是真的）。</p>
+    <div class="scenes">
+      <article class="polaroid"><div class="ph" aria-hidden="true">🏃</div><h3>箱根驿传 · 最后一公里</h3><p>《强风吹拂》。接力带递出去的那一刻，屏幕外的我也跟着喘。「你喜欢跑步吗？」喜欢。</p><span class="stamp">已泪目</span></article>
+      <article class="polaroid"><div class="ph" aria-hidden="true">🏀</div><h3>教练，我想打篮球</h3><p>《灌篮高手》三井寿跪地名场面。运动番的尽头是悔悟与回归，我的尽头是再练一组。</p><span class="stamp">DNA 动了</span></article>
+      <article class="polaroid"><div class="ph" aria-hidden="true">🏐</div><h3>飞吧！</h3><p>《排球少年》乌野对青叶城西，及川的发球、影山的托球。才能是开花的东西，努力是让它开花的土。</p><span class="stamp">起跳了</span></article>
+      <article class="polaroid"><div class="ph" aria-hidden="true">🚴</div><h3>总北 vs 箱根学园</h3><p>《飙速宅男》。小野田坂道唱着歌爬坡的样子，像极了边哼歌边调电机的我。</p><span class="stamp">坡道真香</span></article>
+      <article class="polaroid"><div class="ph" aria-hidden="true">💪</div><h3>罗尼 · 耶巴蒂</h3><p>「Everybody wanna be a bodybuilder, but don't nobody wanna lift no heavy ass weight.」翻译：都想变强，都不想加片。</p><span class="stamp">Light weight!</span></article>
+      <article class="polaroid"><div class="ph" aria-hidden="true">🌊</div><h3>海边的最后一公里</h3><p>青岛的海风配速 +10%。跑过栈桥那天，夕阳把影子拉得比摆杆还直。</p><span class="stamp">本地名场面</span></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>梗贴纸墙 <span class="arrow">↷</span></h2>
+    <p class="sub">撕下来贴在任何需要的地方。hover 一下，它们会努力站直。</p>
+    <div class="memes">
+      <span class="meme">真香</span><span class="meme">YYDS</span><span class="meme">燃起来了</span><span class="meme">DNA 动了</span><span class="meme">教练我想打篮球</span><span class="meme">风太大我听不见</span><span class="meme">耶巴蒂 莱维贝贝</span><span class="meme">Light weight baby</span><span class="meme">痛苦面具</span><span class="meme">表情管理下线</span><span class="meme">配速是什么 能吃吗</span><span class="meme">碳基生物极限</span><span class="meme">多巴胺闭环</span><span class="meme">稳住 别倒</span><span class="meme">今天也是力竭的一天</span><span class="meme">跑完这公里就回家</span><span class="meme">再来一组 就一组</span><span class="meme">海风配速 +10%</span>
+    </div>
+    <span class="margin-note">※ 贴纸不防水，但防 emo。</span>
+  </section>
+
+  <section class="section">
+    <h2>想玩清单 <span class="arrow">↷</span></h2>
+    <p class="sub">画了勾的就是玩过的，没勾的正在路上。</p>
+    <ul class="todo">
+      <li class="done"><span class="box"></span>海边夜跑，跑完吃烤鱿鱼</li>
+      <li class="done"><span class="box"></span>把倒立摆敲一下，看它自己回正（已玩，很稳）</li>
+      <li class="done"><span class="box"></span>深蹲加片到表情管理下线</li>
+      <li><span class="box"></span>环青海湖骑行，坡道上唱《平凡之路》</li>
+      <li><span class="box"></span>跑一次半马，终点摆一个倒立摆庆祝</li>
+      <li><span class="box"></span>学会自由泳，把「稳住别倒」升级成「稳住别沉」</li>
+    </ul>
+    <span class="margin-note">※ 清单长期有效，鸽了也算积累势能。</span>
+  </section>
+
+  <footer>
+    <span>保持好奇，未完待续。—— 毛婆婆 手记</span>
+    <span><a href="./profile.html">关于 →</a> · <a href="./works.html">作品 →</a></span>
+  </footer>
+</div>
+</body>
+</html>

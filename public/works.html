@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:,">
+<meta name="description" content="毛婆婆的作品卡带：动态视觉实验室、今日灵感盲盒、GARGANTUA 黑洞、雨夜便利店街角。">
+<title>作品卡带 — 毛婆婆</title>
+<style>
+  /* Pixel Anime（StyleKit spec）：GBA 时代 JRPG 语法——对话框 4px 直角边框 + 角块、
+     等宽字体、NES 蓝红金绿；75ms linear 硬过渡；无圆角、无模糊、无渐变发光 */
+  :root{
+    --color-hero-blue:#4a90d9;--color-night-purple:#2d1b69;--color-alert-red:#ff6b6b;
+    --color-coin-gold:#ffd93d;--color-heal-green:#50c878;--color-olive:#a98d16;
+    --frame:#1a1038;--ground:#140b2e;--white:#f4f2ff;
+    --font-mono:'Courier New',ui-monospace,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--white);font-family:var(--font-mono);font-size:12px;line-height:1.8;-webkit-font-smoothing:none}
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:4px solid var(--color-coin-gold);outline-offset:2px}
+  ::selection{background:var(--color-coin-gold);color:var(--color-night-purple)}
+  .wrap{width:min(960px,calc(100% - 32px));margin-inline:auto}
+  /* 顶栏 */
+  .top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 0}
+  .top .brand{font-size:14px;letter-spacing:.12em;color:var(--color-coin-gold)}
+  .top .back{color:var(--white);border:4px solid var(--color-hero-blue);padding:8px 16px;background:var(--frame);box-shadow:4px 4px 0 var(--color-night-purple);transition:none}
+  .top .back:hover{background:var(--color-coin-gold);color:var(--color-night-purple);border-color:var(--color-night-purple)}
+  /* 对话框 */
+  .dialog{position:relative;background:var(--frame);border:4px solid var(--color-hero-blue);padding:20px;box-shadow:4px 4px 0 rgba(0,0,0,.55)}
+  .dialog i.c{position:absolute;width:8px;height:8px;background:var(--color-hero-blue)}
+  .dialog i.tl{top:4px;left:4px}.dialog i.tr{top:4px;right:4px}.dialog i.bl{bottom:4px;left:4px}.dialog i.br{bottom:4px;right:4px}
+  .intro{margin-top:24px}
+  .intro .sys{color:var(--color-heal-green);letter-spacing:.12em;font-size:10px}
+  h1{margin:12px 0 0;font-size:32px;line-height:1.35;letter-spacing:.05em;font-weight:400;color:var(--color-coin-gold)}
+  .intro p{margin:12px 0 0;font-size:14px}
+  .intro .blink{display:inline-block;color:var(--color-coin-gold);animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  /* 状态条 */
+  .stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+  .stat{flex:1 1 140px;background:var(--frame);border:4px solid var(--color-night-purple);padding:12px;box-shadow:4px 4px 0 rgba(0,0,0,.55)}
+  .stat .k{font-size:10px;letter-spacing:.12em;color:var(--color-hero-blue)}
+  .stat .v{font-size:18px;color:var(--color-coin-gold);margin-top:4px}
+  .hp{height:12px;border:2px solid var(--color-hero-blue);margin-top:8px;background:var(--ground)}
+  .hp i{display:block;height:100%;background:var(--color-heal-green)}
+  .hp.gold i{background:var(--color-coin-gold)}
+  .hp.red i{background:var(--color-alert-red)}
+  /* 作品卡带 */
+  .carts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:64px}
+  .cart{position:relative;background:var(--frame);border:4px solid var(--color-hero-blue);padding:20px;box-shadow:4px 4px 0 rgba(0,0,0,.55);transition:none}
+  .cart:hover{border-color:var(--color-coin-gold)}
+  .cart .lv{position:absolute;top:-14px;right:12px;background:var(--color-coin-gold);color:var(--color-night-purple);border:4px solid var(--color-night-purple);padding:2px 10px;font-size:10px;letter-spacing:.12em}
+  .cart .slot{font-size:10px;letter-spacing:.12em;color:var(--color-hero-blue)}
+  .cart h2{margin:8px 0 0;font-size:18px;line-height:1.5;font-weight:400;color:var(--white)}
+  .cart .thumb{display:block;margin:12px 0 0;border:4px solid var(--color-night-purple);background:var(--ground)}
+  .cart .thumb img{display:block;width:100%;height:160px;object-fit:cover;object-position:top;image-rendering:pixelated}
+  .cart p{margin:12px 0 0;color:#cfc8ee}
+  .cart .quip{color:var(--color-heal-green)}
+  .cmd{display:inline-flex;align-items:center;margin-top:16px;background:var(--color-hero-blue);color:#fff;border:4px solid var(--color-night-purple);padding:12px 24px;font-size:14px;letter-spacing:.12em;box-shadow:4px 4px 0 var(--color-night-purple);cursor:pointer;transition:none}
+  .cmd:hover{background:var(--color-coin-gold);color:var(--color-night-purple)}
+  .cmd:active{transform:translate(4px,4px);box-shadow:none}
+  /* 页脚 */
+  footer{margin-top:64px;padding:24px 0 48px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#8f86c9}
+  footer a{color:var(--color-hero-blue)}
+  footer a:hover{color:var(--color-coin-gold)}
+  @media (max-width:700px){.carts{grid-template-columns:1fr}h1{font-size:24px}}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><span class="brand">毛婆婆 · WORKS SAVE FILE</span><a class="back" href="./index.html">← 返回研究</a></header>
+
+  <section class="dialog intro">
+    <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+    <span class="sys">SYSTEM ▸ 想法，有了形状</span>
+    <h1>小小作品。<br>大大的好奇。</h1>
+    <p>我提出想法、选择体验方向，借助 AI 辅助实现，在尝试中迭代。以下是已插入的四盘卡带，选一盘开始。<span class="blink">▼</span></p>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><span class="k">CARTS</span><div class="v">04</div><div class="hp gold"><i style="width:100%"></i></div></div>
+    <div class="stat"><span class="k">CURIOSITY</span><div class="v">MAX</div><div class="hp"><i style="width:100%"></i></div></div>
+    <div class="stat"><span class="k">SLEEP</span><div class="v">LOW</div><div class="hp red"><i style="width:18%"></i></div></div>
+  </div>
+
+  <section class="carts" aria-label="作品列表">
+    <article class="cart">
+      <span class="lv">Lv.15</span>
+      <span class="slot">SLOT 01 · INTERACTIVE</span>
+      <h2>动态视觉实验室</h2>
+      <a class="thumb" href="./visual-lab.html" aria-label="打开动态视觉实验室"><img src="./assets/profile/visual-lab.jpg" alt="动态视觉实验室实际页面，包含互动转盘和精选视觉实验" width="1440" height="960" loading="lazy"></a>
+      <p>十五种动态视觉，五个精选实验。拖动、切换，亲手感受网页交互的可能。</p>
+      <p class="quip">转动灵感，走进交互的另一面。</p>
+      <a class="cmd" href="./visual-lab.html">▶ 体验作品</a>
+    </article>
+    <article class="cart">
+      <span class="lv">Lv.04</span>
+      <span class="slot">SLOT 02 · EVERYDAY</span>
+      <h2>今日灵感盲盒</h2>
+      <a class="thumb" href="./projects/daily-spark/index.html" aria-label="打开今日灵感盲盒"><img src="./assets/profile/daily-spark.jpg" alt="今日灵感盲盒实际页面，包含礼盒、灵感分类和开启按钮" width="1440" height="960" loading="lazy"></a>
+      <p>抽取一份小挑战、一个新视角。收藏喜欢的灵感，从一个小行动开始。</p>
+      <p class="quip">给平凡的一天，开一点新鲜感。</p>
+      <a class="cmd" href="./projects/daily-spark/index.html">▶ 打开盲盒</a>
+    </article>
+    <article class="cart">
+      <span class="lv">Lv.∞</span>
+      <span class="slot">SLOT 03 · 3D RAYTRACE</span>
+      <h2>GARGANTUA 黑洞</h2>
+      <a class="thumb" href="./works/gargantua.html" aria-label="打开 GARGANTUA 黑洞"><img src="./assets/profile/gargantua.jpg" alt="GARGANTUA 黑洞实际画面，吸积盘环绕黑色事件视界" width="1440" height="960" loading="lazy"></a>
+      <p>史瓦西黑洞光线追踪：吸积盘、引力透镜、事件视界，全部实时算出来。</p>
+      <p class="quip">「不要温和地走进那个良夜。」——凑近一点，光会弯。</p>
+      <a class="cmd" href="./works/gargantua.html">▶ 靠近视界</a>
+    </article>
+    <article class="cart">
+      <span class="lv">Lv.24</span>
+      <span class="slot">SLOT 04 · 3D SCENE</span>
+      <h2>雨夜便利店街角</h2>
+      <a class="thumb" href="./works/rainy-convenience.html" aria-label="打开雨夜便利店街角"><img src="./assets/profile/rainy.jpg" alt="雨夜便利店街角实际画面，霓虹招牌与湿漉路面反光" width="1440" height="960" loading="lazy"></a>
+      <p>电影版雨夜街角：霓虹、雨丝、湿地反光，镜头随便拉，参数随便拧。</p>
+      <p class="quip">凌晨两点，关东煮和霓虹都还亮着。</p>
+      <a class="cmd" href="./works/rainy-convenience.html">▶ 走进雨夜</a>
+    </article>
+  </section>
+
+  <footer>
+    <span>SAVE OK · 保持好奇，未完待续。</span>
+    <span><a href="./profile.html">关于 →</a> · <a href="./life.html">生活 →</a></span>
+  </footer>
+</div>
+</body>
+</html>

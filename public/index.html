@@ -1,16 +1,728 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff"><meta name="description" content="毛婆婆的个人主页。控制工程研究生，正在学习 STM32，探索机器人与传感器，也记录作品与运动生活。"><title>毛婆婆 — 保持好奇，探索更多可能。</title><link rel="stylesheet" href="./profile.css"></head>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:,">
+<meta name="description" content="毛婆婆的 M 标志线场研究：一条路径、一片光场、四档线宽。原生 Canvas 2D，无外部资源。">
+<title>Identity, in lines. — 毛婆婆 M 研究</title>
+<style>
+  :root{
+    color:#252725;background:#fafaf8;
+    font-family:Arial,Helvetica,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-synthesis:none;-webkit-font-smoothing:antialiased;
+  }
+  *{box-sizing:border-box}
+  body{margin:0}
+  button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+  button:focus-visible,article:focus-visible{outline:2px solid #247cff;outline-offset:6px}
+  main{width:min(1200px,calc(100% - 80px));margin:0 auto;padding:43px 0 30px}
+  .masthead{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .signature{display:flex;align-items:baseline;gap:13px;font-size:12px}
+  .signature strong{font:600 23px Georgia,"Times New Roman","Songti SC",serif;letter-spacing:-1px}
+  .signature span{color:#777a73}
+  .motion-button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:9px 16px;border:1px solid #dedfd9;border-radius:30px;background:transparent;font-size:11px;cursor:pointer}
+  .motion-button:hover{background:#edeee8}
+  .motion-dot{width:5px;height:5px;background:#287bff;border-radius:50%}
+  .motion-button[aria-pressed="false"] .motion-dot{background:#93958c}
+  .introduction{display:flex;justify-content:space-between;align-items:flex-end;gap:35px;margin:55px 0 29px}
+  h1{margin:0;font:400 clamp(38px,4.1vw,57px)/1.04 Georgia,"Times New Roman","Songti SC",serif;letter-spacing:-2.5px}
+  .introduction p{margin:0 0 3px;max-width:267px;color:#7b7e76;font-size:12px;line-height:1.7}
+  .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}
+  /* 体积来自底板叠层，不是模糊：同尺寸同圆角，向下 6px，1px 描边，不透明度 .7。
+     悬浮时卡片 -4px、底板 +12px 且升到 1，净视差约 16px；只用 translate，占位不变。 */
+  .card-slot{position:relative;isolation:isolate;min-width:0}
+  .card-slot::before{content:"";position:absolute;inset:0;z-index:0;border-radius:17px;background:var(--plate,#d1d1cc);border:1px solid rgba(32,34,32,.12);opacity:.7;transform:translateY(6px);transition:transform .3s ease-out,opacity .3s ease-out}
+  .card-slot:hover::before,.card-slot:focus-within::before{transform:translateY(12px);opacity:1}
+  .brand-card{
+    --background:#eeeeeb;--foreground:#202220;--secondary:#686b64;
+    position:relative;z-index:1;min-height:460px;aspect-ratio:.70;overflow:hidden;border-radius:17px;
+    background:var(--background);color:var(--foreground);touch-action:pan-y;
+    transition:transform .3s ease-out;cursor:pointer;
+  }
+  .card-slot:hover .brand-card,.card-slot:focus-within .brand-card{transform:translateY(-4px)}
+  .brand-card[data-brand="deep"]{--background:#25414A;--foreground:#E4EFEB;--secondary:#a9c3bd}
+  .brand-card[data-brand="signal"]{--background:#101418;--foreground:#cfe0f4;--secondary:#8fa8c4}
+  .field{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  .card-header{position:relative;z-index:1;display:flex;align-items:center;gap:9px;padding:27px 27px 0;pointer-events:none}
+  .mini-mark{flex:none;width:21px;height:25px}
+  .brand-name{margin:0;font-size:15px;font-weight:500;letter-spacing:-.3px}
+  .scan-status{margin-left:auto;font-size:9px;letter-spacing:.01em;color:var(--secondary);opacity:.7}
+  .card-footer{position:absolute;left:29px;right:25px;bottom:29px;z-index:2;pointer-events:none}
+  .tagline{margin:0 0 23px;font-size:clamp(27px,2.75vw,37px);font-weight:400;line-height:1.12;letter-spacing:-1.2px}
+  .source-button{display:inline-flex;align-items:center;gap:15px;min-height:44px;border:0;border-bottom:1px solid transparent;background:none;padding:0 0 3px;font-size:11px;color:var(--secondary);cursor:pointer;pointer-events:auto}
+  .source-button:hover{color:var(--foreground);border-bottom-color:currentColor}
+  .source-button span{font-size:17px;line-height:10px}
+  .colophon{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:23px;color:#86887f;font-size:10px;line-height:1.5}
+  .colophon p{margin:0}
+  .colophon .recipe{color:#62665d}
+  .fallback{padding:20px;border:1px solid #d4d4d0;font-size:14px}
+  dialog{width:min(680px,calc(100vw - 36px));max-height:min(80vh,740px);overflow:auto;padding:34px;border:1px solid #dfe1d8;border-radius:19px;background:#fafaf8;color:#252725}
+  dialog::backdrop{background:rgb(16 20 24 / .5)}
+  .dialog-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  dialog h2{margin:0;font:400 34px/1.1 Georgia,"Times New Roman","Songti SC",serif;letter-spacing:-1.2px}
+  .close-button{background:none;border:0;min-width:44px;min-height:44px;padding:4px 0 4px 15px;font-size:22px;line-height:1;cursor:pointer}
+  .dialog-description{color:#70756b;margin:17px 0 23px;font-size:13px;line-height:1.7}
+  .source-facts{display:flex;flex-wrap:wrap;gap:8px 20px;padding:15px 0;border-block:1px solid #e0e3da;color:#63695d;font-size:11px}
+  .source-facts strong{color:#252725;font-weight:500}
+  pre{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.8 Consolas,"SFMono-Regular",monospace;padding:20px;margin:20px 0;border-radius:9px;background:#eef0e9}
+  .copy-button{border:1px solid #d4d8ce;border-radius:6px;background:transparent;min-height:44px;padding:9px 13px;font-size:12px;cursor:pointer}
+  @media (min-width:1450px){main{padding-top:58px}.introduction{margin-top:76px}}
+  @media (max-width:850px){
+    main{width:calc(100% - 40px);padding-top:27px}
+    .introduction{margin-top:40px}
+    h1{font-size:44px}
+    .introduction p{max-width:190px}
+    .cards{gap:13px}
+    .brand-card{min-height:430px}
+    .card-header{padding:23px 18px 0;gap:6px}
+    .scan-status{display:none}
+    .card-footer{left:21px;right:15px;bottom:25px}
+    .tagline{font-size:27px}
+  }
+  @media (max-width:650px){
+    main{width:min(420px,calc(100% - 36px))}
+    .signature span{font-size:10px}
+    .introduction{display:block;margin:40px 0 25px}
+    h1{font-size:42px;letter-spacing:-1.9px}
+    .introduction p{max-width:270px;margin-top:15px;font-size:12px}
+    .cards{grid-template-columns:1fr;gap:17px}
+    .brand-card{min-height:460px}
+    .card-header{padding:27px 27px 0;gap:9px}
+    .scan-status{display:block}
+    .card-footer{left:29px;bottom:29px}
+    .tagline{font-size:34px}
+    dialog{padding:25px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{scroll-behavior:auto!important;transition:none!important}
+    .brand-card{transform:none!important}
+    .card-slot::before{transform:translateY(6px)!important}
+  }
+</style>
+</head>
 <body>
-<a class="skip-link" href="#main">跳到正文</a>
-<header class="site-header"><div class="nav-inner"><a href="#about" class="wordmark">毛婆婆<span class="brand-dot">.</span></a><nav aria-label="主导航"><a href="#about">关于</a><a href="#learning">学习</a><a href="#projects">作品</a><a href="#life">生活</a></nav><a class="nav-action" href="#projects">探索作品 <span aria-hidden="true">↗</span></a></div></header>
-<main id="main">
-<section class="hero-story" id="about" aria-labelledby="hero-title"><div class="hero-sticky"><div class="hero-copy"><p class="eyebrow">毛婆婆的个人空间</p><h1 id="hero-title">毛婆婆<span>。</span></h1><h2>保持好奇，探索更多可能。</h2><p class="hero-description">控制工程研究生。<br class="mobile-break">正在学习 STM32，对机器人与传感器方向感兴趣。</p><a class="text-link" href="#projects">探索我的作品 <span aria-hidden="true">↗</span></a></div><div class="device-stage" role="img" aria-label="原创银色精密环形装置，象征控制、感知与探索"><img class="device-fallback" src="./assets/profile/device-fallback.png" width="1400" height="750" alt="" fetchpriority="high"><canvas id="metal-device" aria-hidden="true"></canvas><div class="device-label label-left"><span class="label-rule"></span><span>CONTROL<br><b>从理解开始</b></span></div><div class="device-label label-right"><span>EXPLORE<br><b>向未知靠近</b></span><span class="label-rule"></span></div></div><div class="hero-bottom"><span>学习 · 探索 · 创造</span><span>向下探索 <i aria-hidden="true">↓</i></span></div></div></section>
-<section class="learning-section section-wrap" id="learning" aria-labelledby="learning-title"><div class="section-intro reveal"><p class="eyebrow">始于好奇</p><h2 id="learning-title">从理解，<br>走向创造。</h2><p class="section-description">每一次探索，<br>都从一个想弄明白的问题开始。</p></div><div class="learning-grid"><article class="learning-item reveal"><div class="learning-icon chip-icon" aria-hidden="true">＋</div><span class="status active">正在学习</span><h3>STM32</h3><p>从微控制器开始，<br>理解代码与真实世界的联系。</p></article><article class="learning-item reveal"><div class="learning-icon terminal-icon" aria-hidden="true">&gt;_</div><span class="status">计划学习</span><h3>Linux</h3><p>下一步，走近系统，<br>打开新的技术视野。</p></article><article class="learning-item reveal"><div class="learning-icon sensor-icon" aria-hidden="true">◎</div><span class="status">兴趣探索</span><h3>机器人与传感器</h3><p>感知与运动之间，<br>还有很多值得探索的可能。</p></article></div></section>
-<section id="projects" class="projects-section" aria-labelledby="projects-title"><div class="section-wrap section-intro reveal"><p class="eyebrow">想法，有了形状</p><h2 id="projects-title">小小作品。<br><span class="secondary">大大的好奇。</span></h2><p class="section-description">我提出想法、选择体验方向，<br>借助 AI 辅助实现，在尝试中迭代。</p></div>
-<article class="project project-lab section-wrap"><div class="project-heading reveal"><div><p class="eyebrow">01 / INTERACTIVE EXPERIENCE</p><h3>动态视觉实验室</h3><p>转动灵感，走进交互的另一面。</p></div><a class="round-link" href="./visual-lab.html" aria-label="体验动态视觉实验室">体验作品 <span aria-hidden="true">↗</span></a></div><a class="project-image-link" href="./visual-lab.html" aria-label="打开动态视觉实验室"><div class="browser-frame"><div class="browser-bar"><span class="window-dots" aria-hidden="true">● ● ●</span><span>VISUAL LAB</span><span aria-hidden="true">↗</span></div><img src="./assets/profile/visual-lab.jpg" alt="动态视觉实验室实际页面，包含互动转盘和精选视觉实验" width="1440" height="960" loading="lazy" decoding="async"></div></a><div class="project-caption"><p>十五种动态视觉，五个精选实验。<br>拖动、切换，亲手感受网页交互的可能。</p><span>个人创意实践 · AI 辅助实现</span></div></article>
-<article class="project project-spark section-wrap"><div class="project-heading reveal"><div><p class="eyebrow">02 / EVERYDAY INSPIRATION</p><h3>今日灵感盲盒</h3><p>给平凡的一天，开一点新鲜感。</p></div><a class="round-link" href="./projects/daily-spark/index.html" aria-label="体验今日灵感盲盒">打开盲盒 <span aria-hidden="true">↗</span></a></div><a class="project-image-link" href="./projects/daily-spark/index.html" aria-label="打开今日灵感盲盒"><div class="browser-frame"><div class="browser-bar"><span class="window-dots" aria-hidden="true">● ● ●</span><span>DAILY SPARK</span><span aria-hidden="true">↗</span></div><img src="./assets/profile/daily-spark.jpg" alt="今日灵感盲盒实际页面，包含礼盒、灵感分类和开启按钮" width="1440" height="960" loading="lazy" decoding="async"></div></a><div class="project-caption"><p>抽取一份小挑战、一个新视角。<br>收藏喜欢的灵感，从一个小行动开始。</p><span>个人创意实践 · AI 辅助实现</span></div></article></section>
-<section id="life" class="life-section section-wrap" aria-labelledby="life-title"><div class="section-intro reveal"><p class="eyebrow">屏幕之外</p><h2 id="life-title">保持向前，<br><span class="secondary">也在屏幕之外。</span></h2><p class="section-description">跑步、骑车、健身。<br>在运动里，找到自己的节奏。</p></div><div class="life-grid"><article class="reveal"><svg viewBox="0 0 260 130" aria-hidden="true"><path d="M10 110Q80 20 150 65T270 25M10 95Q80 5 150 50T270 10M10 125Q80 35 150 80T270 40"/></svg><h3>跑步</h3><span>RUNNING</span></article><article class="reveal"><svg viewBox="0 0 260 130" aria-hidden="true"><circle cx="65" cy="82" r="32"/><circle cx="195" cy="82" r="32"/><path d="M65 82L103 25 151 82H65M103 25H168L195 82M160 16H188"/></svg><h3>骑车</h3><span>CYCLING</span></article><article class="reveal"><svg viewBox="0 0 260 130" aria-hidden="true"><path d="M75 65H185M60 30V100M80 40V90M180 40V90M200 30V100M45 52V78M215 52V78"/></svg><h3>健身</h3><span>FITNESS</span></article></div></section>
-</main><footer class="site-footer section-wrap"><a href="#about" class="wordmark">毛婆婆.</a><span>保持好奇，未完待续。</span><a href="#about">回到顶部 ↑</a></footer>
-<script type="module" src="./profile-effects.js"></script>
-</body></html>
+<main>
+  <header class="masthead">
+    <div class="signature"><strong>毛婆婆</strong><span>Visual studies · M</span></div>
+    <button type="button" class="motion-button" id="motion-toggle" aria-pressed="true"><span class="motion-dot" aria-hidden="true"></span><span id="motion-label">动效</span></button>
+  </header>
+  <div class="introduction">
+    <h1>Identity, in lines.</h1>
+    <p>Move through a familiar mark.<br>Find the structure beneath the surface.<br>一条 M 路径，三种光。</p>
+  </div>
+  <p id="fallback" class="fallback" hidden>此研究需要支持 Canvas 2D 与 Path2D 的浏览器。</p>
+  <section class="cards" aria-label="毛婆婆的三个入口：关于、作品、生活">
+    <div class="card-slot">
+      <article class="brand-card" data-brand="paper" data-href="./profile.html" role="link" tabindex="0" aria-label="关于我：保持好奇，探索更多可能。点击进入个人简介。">
+        <canvas class="field" aria-hidden="true"></canvas>
+        <div class="card-header"><canvas class="mini-mark" aria-hidden="true"></canvas><h2 class="brand-name">About 关于</h2><span class="scan-status" aria-hidden="true">悬停扫描</span></div>
+        <div class="card-footer"><p class="tagline">保持好奇，<br>探索更多可能。</p><button type="button" class="source-button" data-source="paper" aria-label="查看关于卡片的来源路径">Reveal the source <span aria-hidden="true">→</span></button></div>
+      </article>
+    </div>
+    <div class="card-slot">
+      <article class="brand-card" data-brand="deep" data-href="./works.html" role="link" tabindex="0" aria-label="作品：小小作品，大大的好奇。点击进入个人作品。">
+        <canvas class="field" aria-hidden="true"></canvas>
+        <div class="card-header"><canvas class="mini-mark" aria-hidden="true"></canvas><h2 class="brand-name">Works 作品</h2><span class="scan-status" aria-hidden="true">悬停扫描</span></div>
+        <div class="card-footer"><p class="tagline">小小作品。<br>大大的好奇。</p><button type="button" class="source-button" data-source="deep" aria-label="查看作品卡片的来源路径">Reveal the source <span aria-hidden="true">→</span></button></div>
+      </article>
+    </div>
+    <div class="card-slot">
+      <article class="brand-card" data-brand="signal" data-href="./life.html" role="link" tabindex="0" aria-label="生活：保持向前，也在屏幕之外。点击进入兴趣爱好。">
+        <canvas class="field" aria-hidden="true"></canvas>
+        <div class="card-header"><canvas class="mini-mark" aria-hidden="true"></canvas><h2 class="brand-name">Life 生活</h2><span class="scan-status" aria-hidden="true">悬停扫描</span></div>
+        <div class="card-footer"><p class="tagline">保持向前，<br>也在屏幕之外。</p><button type="button" class="source-button" data-source="signal" aria-label="查看生活卡片的来源路径">Reveal the source <span aria-hidden="true">→</span></button></div>
+      </article>
+    </div>
+  </section>
+  <footer class="colophon"><p>A study of recognition and reconstruction.</p><p class="recipe">One path. A field of light. Four line weights.</p></footer>
+</main>
+<dialog id="source-dialog" aria-labelledby="source-title" aria-describedby="source-description">
+  <div class="dialog-heading"><h2 id="source-title">M, before the lines.</h2><button type="button" class="close-button" aria-label="关闭来源弹窗">×</button></div>
+  <p class="dialog-description" id="source-description">这条 M 路径只被采样一次，成为 60×60 的亮度表。卡片上看到的一切——竹节般的竖线、缓慢下流的噪声、弹簧散开与蓝色检测框——都只从这张表数值计算而来。M 的直腿与悬空中心顶点取自个人主页的银色环形装置，V 形缺口里的圆点是「保持好奇」。</p>
+  <div class="source-facts"><span>采样 <strong>60 × 60</strong></span><span>线宽档位 <strong>4</strong></span><span>图片请求 <strong>0</strong></span></div>
+  <pre><code id="source-code"></code></pre>
+  <button type="button" class="copy-button" id="copy-source">复制路径</button>
+</dialog>
+<script>
+"use strict";
+/*
+ * 毛婆婆 M · 量化线场研究（单文件，原生 Canvas 2D / Path2D）。
+ * 机制承自 StyleKit "quantized brand field" 研究：一次性超采样掩膜、
+ * 四档线宽、下流 value noise、阻尼径向弹簧、积分图窗口 + 空间非极大值抑制检测框。
+ * 体积改为底板叠层（同尺寸同圆角、6px 下移、1px 描边、.7 不透明度），
+ * 悬浮卡片 -4px / 底板 +12px，仅 translate，占位高度不变；
+ * 体积只靠底板叠层，不使用任何模糊滤镜或大范围投影。
+ * M 路径为原创：24×24 空间，直腿 + 悬空中心顶点 + V 缺口圆点。
+ * 采样画布、context 与像素缓存均为 sampleLogo 局部变量，读一次即弃；
+ * 尺寸与 DPR 变化绝不重新采样。
+ */
+(() => {
+  const GRID = 60;
+  const COUNT = GRID * GRID;
+  const WIDTHS = [0.38, 1.12, 2.28, 3.80];
+  const ALPHAS = [0.15, 0.64, 0.93, 1];
+  const M_PATH = "M3 20V4h4.4l4.6 7.8L16.6 4H21v16h-3.4V9.8l-4 6.6h-3.2l-4-6.6V20z M13.6 6.3a1.6 1.6 0 1 1-3.2 0 1.6 1.6 0 1 1 3.2 0z";
+  const BRANDS = {
+    paper:  { name: "Paper 纸面",     ink: "#202929", detection: "#267dff", seed: 7,  scale: 0.88, background: "#F3F2ED" },
+    deep:   { name: "Deep Sea 深海",  ink: "#E4EFEB", detection: "#91dcff", seed: 23, scale: 0.82, background: "#25414A" },
+    signal: { name: "Signal 信号",    ink: "#669ed1", detection: "#4eaeff", seed: 47, scale: 0.90, background: "#101418" }
+  };
+
+  let samplingReads = 0;
+  let frames = 0;
+  let raf = 0;
+  let lastTime = 0;
+  let clock = 0;
+  let dialogOpen = false;
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let playing = !reducedMotion.matches;
+  const motionButton = document.getElementById("motion-toggle");
+  const motionLabel = document.getElementById("motion-label");
+  const dialog = document.getElementById("source-dialog");
+  let sourcePath = "";
+
+  /* 底板颜色：浅底混 16% #202220 压暗；深底混 28% #fafaf8 提亮 */
+  function mix(hexA, hexB, t) {
+    const a = parseInt(hexA.slice(1), 16), b = parseInt(hexB.slice(1), 16);
+    const ch = (shift) => Math.round(((a >> shift) & 255) * (1 - t) + ((b >> shift) & 255) * t);
+    return "#" + ((1 << 24) + (ch(16) << 16) + (ch(8) << 8) + ch(0)).toString(16).slice(1);
+  }
+  function luminanceOf(hex) {
+    const v = parseInt(hex.slice(1), 16);
+    return (0.2126 * ((v >> 16) & 255) + 0.7152 * ((v >> 8) & 255) + 0.0722 * (v & 255)) / 255;
+  }
+  for (const key of Object.keys(BRANDS)) {
+    const brand = BRANDS[key];
+    const light = luminanceOf(brand.background) > 0.5;
+    brand.plate = light ? mix(brand.background, "#202220", 0.16) : mix(brand.background, "#fafaf8", 0.28);
+    const slot = document.querySelector('.brand-card[data-brand="' + key + '"]').parentElement;
+    slot.style.setProperty("--plate", brand.plate);
+  }
+
+  function sampleLogo(brand) {
+    const supersampling = 5;
+    const side = GRID * supersampling; /* 300 = 60 格 × 5 超采样像素 */
+    const scratch = document.createElement("canvas");
+    scratch.width = side;
+    scratch.height = side;
+    const context = scratch.getContext("2d", { willReadFrequently: true });
+    if (!context) throw new Error("Canvas 2D is unavailable.");
+    context.fillStyle = "#000";
+    context.fillRect(0, 0, side, side);
+    const scale = side * brand.scale / 24;
+    context.translate(side / 2, side / 2);
+    context.scale(scale, scale);
+    context.translate(-12, -12);
+    context.fillStyle = "#fff";
+    context.fill(new Path2D(M_PATH));
+    const pixels = context.getImageData(0, 0, side, side).data;
+    samplingReads += 1;
+    const luminance = new Float32Array(COUNT);
+    for (let y = 0; y < GRID; y += 1) {
+      for (let x = 0; x < GRID; x += 1) {
+        let sum = 0;
+        for (let sy = 0; sy < supersampling; sy += 1) {
+          for (let sx = 0; sx < supersampling; sx += 1) {
+            const index = ((y * supersampling + sy) * side + x * supersampling + sx) * 4;
+            sum += (0.2126 * pixels[index] + 0.7152 * pixels[index + 1] + 0.0722 * pixels[index + 2]) / 255;
+          }
+        }
+        luminance[y * GRID + x] = sum / (supersampling * supersampling);
+      }
+    }
+    scratch.width = 0;
+    scratch.height = 0;
+    return luminance; /* context 与 pixels 离开作用域 */
+  }
+
+  /* 把可见线段的信号按双线性权重累积回位移后的网格；数值累积，不再读画布像素 */
+  function splatSignal(field, x, y, value) {
+    const left = Math.floor(x);
+    const top = Math.floor(y);
+    const fx = x - left;
+    const fy = y - top;
+    const signal = Math.max(0, Math.min(1, value));
+    for (let row = 0; row < 2; row += 1) {
+      const gy = top + row;
+      if (gy < 0 || gy >= GRID) continue;
+      for (let col = 0; col < 2; col += 1) {
+        const gx = left + col;
+        if (gx < 0 || gx >= GRID) continue;
+        field[gy * GRID + gx] += signal * (col ? fx : 1 - fx) * (row ? fy : 1 - fy);
+      }
+    }
+  }
+
+  function detectRegions(luminance, previous = []) {
+    const stride = GRID + 1;
+    const integral = new Float64Array(stride * stride);
+    for (let y = 1; y <= GRID; y += 1) {
+      let row = 0;
+      for (let x = 1; x <= GRID; x += 1) {
+        row += Math.min(1, luminance[(y - 1) * GRID + x - 1]);
+        integral[y * stride + x] = integral[(y - 1) * stride + x] + row;
+      }
+    }
+    const candidates = [];
+    const side = 7;
+    let brightest = 0;
+    for (let y = 2; y <= GRID - side - 2; y += 1) {
+      for (let x = 2; x <= GRID - side - 2; x += 1) {
+        const sum = integral[(y + side) * stride + x + side] - integral[y * stride + x + side] - integral[(y + side) * stride + x] + integral[y * stride + x];
+        const score = Math.max(0, Math.min(1, sum / (side * side)));
+        const px = x - 1;
+        const py = y - 1;
+        let nearest = Infinity;
+        for (const region of previous) {
+          if (!region.fadingOut) nearest = Math.min(nearest, (px - (region.pending ? region.pending.x : region.targetX)) ** 2 + (py - (region.pending ? region.pending.y : region.targetY)) ** 2);
+        }
+        const rank = score + 0.025 * Math.exp(-nearest / 128);
+        candidates.push({ x: px, y: py, w: side + 2, h: side + 2, score, rank });
+        brightest = Math.max(brightest, score);
+      }
+    }
+    if (brightest < 0.04) return [];
+    candidates.sort((a, b) => b.rank - a.rank || b.score - a.score || a.y - b.y || a.x - b.x);
+    const selected = [];
+    const threshold = brightest * 0.48;
+    for (const distance of [16, 12]) {
+      for (const candidate of candidates) {
+        if (selected.length === 3) break;
+        if (candidate.score < threshold) continue;
+        if (selected.every((region) => Math.hypot(region.x - candidate.x, region.y - candidate.y) >= distance)) selected.push(candidate);
+      }
+      if (selected.length >= 2) break;
+    }
+    return selected.slice(0, 3);
+  }
+
+  function matchRegions(previous, candidates) {
+    const remaining = new Set(candidates);
+    const matched = [];
+    const lost = [];
+    for (const region of previous) {
+      let closest = null;
+      let distance = 12;
+      for (const candidate of remaining) {
+        const nextDistance = Math.hypot(candidate.x - (region.pending ? region.pending.x : region.targetX), candidate.y - (region.pending ? region.pending.y : region.targetY));
+        if (nextDistance <= distance) { closest = candidate; distance = nextDistance; }
+      }
+      if (closest) {
+        remaining.delete(closest);
+        matched.push(region.pending
+          ? { ...region, pending: closest, fadingOut: false }
+          : { ...closest, x: region.x, y: region.y, targetX: closest.x, targetY: closest.y, vx: region.vx || 0, vy: region.vy || 0, opacity: region.opacity === undefined ? 1 : region.opacity, fadingOut: false });
+      } else {
+        lost.push(matched.length);
+        matched.push({ ...region, pending: null, fadingOut: true, opacity: region.opacity === undefined ? 1 : region.opacity });
+      }
+    }
+    for (const candidate of remaining) {
+      const slot = lost.shift();
+      if (slot !== undefined) matched[slot] = { ...matched[slot], pending: candidate, fadingOut: false };
+      else if (matched.length < 3) matched.push({ ...candidate, targetX: candidate.x, targetY: candidate.y, vx: 0, vy: 0, opacity: 0 });
+    }
+    return matched;
+  }
+
+  function advanceRegions(regions, dt, animate) {
+    for (let index = regions.length - 1; index >= 0; index -= 1) {
+      const region = regions[index];
+      if (region.opacity === undefined) region.opacity = 1;
+      const retiring = region.pending || region.fadingOut;
+      region.opacity += ((retiring ? 0 : 1) - region.opacity) * (animate ? 1 - Math.exp(-dt * 16) : 1);
+      if (retiring && region.opacity < 0.04) {
+        if (region.pending) {
+          const next = region.pending;
+          Object.assign(region, next, { x: next.x, y: next.y, targetX: next.x, targetY: next.y, vx: 0, vy: 0, opacity: animate ? 0 : 1, pending: null, fadingOut: false });
+        } else {
+          regions.splice(index, 1);
+          continue;
+        }
+      }
+      if (!animate) {
+        region.x = region.targetX; region.y = region.targetY;
+        region.vx = 0; region.vy = 0;
+        continue;
+      }
+      region.vx = region.vx || 0; region.vy = region.vy || 0;
+      const steps = Math.max(1, Math.ceil(dt / (1 / 120)));
+      const step = dt / steps;
+      for (let substep = 0; substep < steps; substep += 1) {
+        region.vx += ((region.targetX - region.x) * 144 - region.vx * 24) * step;
+        region.vy += ((region.targetY - region.y) * 144 - region.vy * 24) * step;
+        region.x += region.vx * step;
+        region.y += region.vy * step;
+      }
+      if (Math.hypot(region.x - region.targetX, region.y - region.targetY) < 0.002 && Math.hypot(region.vx, region.vy) < 0.02) {
+        region.x = region.targetX; region.y = region.targetY;
+        region.vx = 0; region.vy = 0;
+      }
+    }
+  }
+
+  function regionBox(region, plotX, plotY, cell) {
+    const gridX = Math.max(0, Math.min(GRID - region.w, region.x));
+    const gridY = Math.max(0, Math.min(GRID - region.h, region.y));
+    return { x: plotX + gridX * cell, y: plotY + gridY * cell, w: region.w * cell, h: region.h * cell, gridX, gridY, opacity: region.opacity === undefined ? 1 : region.opacity };
+  }
+
+  /* xorshift seed 7319 的共享 128×128 格点表；动画中不调用 Math.random */
+  const noiseLattice = new Float32Array(128 * 128);
+  let randomState = 7319;
+  for (let i = 0; i < noiseLattice.length; i += 1) {
+    randomState ^= randomState << 13;
+    randomState ^= randomState >>> 17;
+    randomState ^= randomState << 5;
+    noiseLattice[i] = (randomState >>> 0) / 4294967295 * 2 - 1;
+  }
+  function noise(x, y) {
+    const ix = Math.floor(x);
+    const iy = Math.floor(y);
+    let fx = x - ix;
+    let fy = y - iy;
+    fx = fx * fx * (3 - 2 * fx);
+    fy = fy * fy * (3 - 2 * fy);
+    const a = noiseLattice[(iy & 127) * 128 + (ix & 127)];
+    const b = noiseLattice[(iy & 127) * 128 + ((ix + 1) & 127)];
+    const c = noiseLattice[((iy + 1) & 127) * 128 + (ix & 127)];
+    const d = noiseLattice[((iy + 1) & 127) * 128 + ((ix + 1) & 127)];
+    return (a + (b - a) * fx) * (1 - fy) + (c + (d - c) * fx) * fy;
+  }
+  const bucket = (value) => value < 0.12 ? 0 : value < 0.42 ? 1 : value < 0.89 ? 2 : 3;
+
+  class LineCard {
+    constructor(element) {
+      this.element = element;
+      this.brand = BRANDS[element.dataset.brand];
+      this.canvas = element.querySelector(".field");
+      this.context = this.canvas.getContext("2d");
+      if (!this.context) throw new Error("Canvas 2D is unavailable.");
+      this.luminance = sampleLogo(this.brand);
+      this.regions = [];
+      this.scanField = new Float32Array(COUNT);
+      this.scanAge = Infinity;
+      this.scanPasses = 0;
+      this.dx = new Float32Array(COUNT);
+      this.dy = new Float32Array(COUNT);
+      this.vx = new Float32Array(COUNT);
+      this.vy = new Float32Array(COUNT);
+      this.pointer = { x: -1000, y: -1000, clientX: -1000, clientY: -1000, impulseX: -1000, impulseY: -1000, dirty: false, pulse: 0 };
+      this.statusElement = element.querySelector(".scan-status");
+      this.status = "悬停扫描";
+      this.hovered = false;
+      this.focused = false;
+      this.visible = true;
+      /* 初始即完整静帧：暂停/屏外判定异常时也能看到完整线场与检测框；
+         播放开始后按悬停态自然衰减 */
+      this.hoverMix = 1;
+      this.frames = 0;
+      element.addEventListener("pointerenter", (event) => {
+        if (event.pointerType !== "touch") this.hovered = true;
+        this.movePointer(event, true);
+      });
+      element.addEventListener("pointermove", (event) => this.movePointer(event));
+      element.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "touch") this.hovered = true;
+        this.movePointer(event, true);
+      });
+      /* 离开/取消只释放悬停态；脉冲一律按 exp(-dt*5.5) 自然衰减，
+         触摸抬起后的 pointerleave 不会抹掉弹簧激励 */
+      const leave = () => { this.hovered = false; this.updateStatus(); requestFrame(); };
+      element.addEventListener("pointerleave", leave);
+      element.addEventListener("pointercancel", leave);
+      /* 触摸抬起：释放悬停态，但脉冲按 exp(-dt*5.5) 自然衰减后复位 */
+      element.addEventListener("pointerup", (event) => { if (event.pointerType === "touch") { this.hovered = false; this.updateStatus(); requestFrame(); } });
+      element.addEventListener("focusin", () => { this.focused = true; this.scanAge = Infinity; this.updateStatus(); requestFrame(); });
+      element.addEventListener("focusout", (event) => {
+        if (!element.contains(event.relatedTarget)) this.focused = false;
+        this.updateStatus(); requestFrame();
+      });
+      this.resize();
+      this.updateStatus();
+    }
+    updateStatus() {
+      const status = this.hovered || this.focused ? "信号锁定" : "悬停扫描";
+      if (status !== this.status) { this.status = status; this.statusElement.textContent = status; }
+    }
+    movePointer(event, impulse = false) {
+      if (impulse || Math.hypot(event.clientX - this.pointer.impulseX, event.clientY - this.pointer.impulseY) > 1.5) {
+        this.pointer.pulse = 1;
+        this.pointer.impulseX = event.clientX; this.pointer.impulseY = event.clientY;
+      }
+      this.pointer.clientX = event.clientX;
+      this.pointer.clientY = event.clientY;
+      this.pointer.dirty = true;
+      this.updateStatus(); requestFrame();
+    }
+    resize() {
+      const rect = this.canvas.getBoundingClientRect();
+      this.width = rect.width;
+      this.height = rect.height;
+      this.dpr = devicePixelRatio || 1;
+      this.canvas.width = Math.round(this.width * this.dpr);
+      this.canvas.height = Math.round(this.height * this.dpr);
+      this.context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      this.plotSize = this.width - (this.width < 260 ? 35 : 58);
+      this.plotX = (this.width - this.plotSize) / 2;
+      this.plotY = Math.min(84, this.height - 145 - this.plotSize);
+      this.plotY = Math.max(69, this.plotY);
+      this.cell = this.plotSize / GRID;
+      this.widthScale = this.cell / 5.25;
+      this.dx.fill(0); this.dy.fill(0); this.vx.fill(0); this.vy.fill(0);
+      this.scanAge = Infinity;
+      this.drawMini();
+      this.bindDprWatch();
+      requestFrame();
+    }
+    /* 单独改变 DPR（CSS 尺寸不变）也要更新像素缓冲：resolution 监听变化后重新绑定 */
+    bindDprWatch() {
+      if (this.dprQuery && this.dprHandler) this.dprQuery.removeEventListener("change", this.dprHandler);
+      this.dprQuery = matchMedia("(resolution: " + this.dpr + "dppx)");
+      this.dprHandler = () => this.resize();
+      this.dprQuery.addEventListener("change", this.dprHandler);
+    }
+    drawMini() {
+      const canvas = this.element.querySelector(".mini-mark");
+      canvas.width = Math.round(21 * this.dpr);
+      canvas.height = Math.round(25 * this.dpr);
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      context.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      context.clearRect(0, 0, 21, 25);
+      context.strokeStyle = this.brand.ink;
+      context.lineCap = "butt";
+      for (let x = 1; x < GRID; x += 4) {
+        for (let y = 0; y < GRID; y += 3) {
+          const value = this.luminance[y * GRID + x];
+          if (value < 0.12) continue;
+          context.lineWidth = [0.25, 0.45, 0.75, 1.05][bucket(value)];
+          context.beginPath();
+          context.moveTo(x / GRID * 21, y / GRID * 21 + 2);
+          context.lineTo(x / GRID * 21, (y + 3) / GRID * 21 + 2);
+          context.stroke();
+        }
+      }
+    }
+    draw(dt) {
+      if (this.dpr !== (devicePixelRatio || 1)) this.resize();
+      if (this.pointer.dirty) {
+        const rect = this.canvas.getBoundingClientRect();
+        this.pointer.x = this.pointer.clientX - rect.left;
+        this.pointer.y = this.pointer.clientY - rect.top;
+        this.pointer.dirty = false;
+      }
+      /* 暂停态下 resolution 监听可能不派发：任何被调度的静帧绘制前都比较 DPR */
+      if (!playing && this.dpr !== (devicePixelRatio || 1)) this.resize();
+      const context = this.context;
+      context.clearRect(0, 0, this.width, this.height);
+      const active = this.hovered || this.focused;
+      this.hoverMix = playing ? this.hoverMix + ((active ? 1 : 0) - this.hoverMix) * (1 - Math.exp(-dt * 9)) : Number(active);
+      if (this.hoverMix < 0.001) this.hoverMix = 0;
+      const paths = [new Path2D(), new Path2D(), new Path2D(), new Path2D()];
+      this.scanAge += dt;
+      const scanNow = (active || this.hoverMix > 0.005) && (this.scanAge >= 0.1 || !playing);
+      if (scanNow) this.scanField.fill(0);
+      const radius = this.plotSize * 0.25;
+      const strength = active && playing ? this.pointer.pulse : 0;
+      this.pointer.pulse *= Math.exp(-dt * 5.5);
+      /* 每段跨两行采样均值：60 列 × 30 段，竹节节奏 */
+      for (let row = 0; row < GRID; row += 2) {
+        for (let col = 0; col < GRID; col += 1) {
+          const index = row * GRID + col;
+          const baseX = this.plotX + (col + 0.5) * this.cell;
+          const baseY = this.plotY + (row + 1) * this.cell;
+          const value = (this.luminance[index] + this.luminance[index + GRID]) / 2;
+          const flow = noise(col * 0.15 + this.brand.seed, row * 0.16 - clock * 0.17);
+          const signal = value * 0.94 + flow * 0.12 * (0.25 + value * 0.75);
+          const level = bucket(signal);
+          if (playing) {
+            const px = baseX - this.pointer.x;
+            const py = baseY - this.pointer.y;
+            const distance = Math.max(0.1, Math.hypot(px, py));
+            const influence = Math.max(0, 1 - distance / radius);
+            const force = influence * influence * strength * 25;
+            const targetX = px / distance * force;
+            const targetY = py / distance * force * 0.58;
+            const step = Math.min(dt, 1 / 30);
+            this.vx[index] += ((targetX - this.dx[index]) * 145 - this.vx[index] * 19) * step;
+            this.vy[index] += ((targetY - this.dy[index]) * 145 - this.vy[index] * 19) * step;
+            this.dx[index] += this.vx[index] * step;
+            this.dy[index] += this.vy[index] * step;
+          }
+          const x = baseX + (playing ? this.dx[index] : 0);
+          const y = baseY + (playing ? this.dy[index] : 0);
+          if (scanNow) {
+            const gx = col + (x - baseX) / this.cell;
+            const gy = row + (y - baseY) / this.cell;
+            splatSignal(this.scanField, gx, gy, signal);
+            splatSignal(this.scanField, gx, gy + 1, signal);
+          }
+          const halfSegment = Math.max(0.35, (this.cell * 2 - 0.7) / 2);
+          paths[level].moveTo(x, y - halfSegment);
+          paths[level].lineTo(x, y + halfSegment);
+        }
+      }
+      context.strokeStyle = this.brand.ink;
+      context.lineCap = "butt";
+      for (let level = 0; level < 4; level += 1) {
+        context.lineWidth = WIDTHS[level] * this.widthScale;
+        context.globalAlpha = ALPHAS[level];
+        context.stroke(paths[level]);
+      }
+      context.globalAlpha = 1;
+      if (scanNow) {
+        this.regions = matchRegions(this.regions, detectRegions(this.scanField, this.regions));
+        this.scanAge = 0;
+        this.scanPasses += 1;
+      }
+      advanceRegions(this.regions, dt, playing);
+      if (this.hoverMix > 0.005) this.drawDetections();
+      this.frames += 1;
+    }
+    drawDetections() {
+      const context = this.context;
+      const boxes = this.regions.map((region) => regionBox(region, this.plotX, this.plotY, this.cell));
+      context.save();
+      context.strokeStyle = this.brand.detection;
+      context.fillStyle = this.brand.detection;
+      context.lineWidth = 0.75;
+      for (let index = 1; index < boxes.length; index += 1) {
+        const a = boxes[index - 1], b = boxes[index];
+        context.globalAlpha = this.hoverMix * Math.min(a.opacity, b.opacity) * 0.65;
+        context.beginPath();
+        context.moveTo(a.x + a.w / 2, a.y + a.h / 2);
+        context.lineTo(b.x + b.w / 2, b.y + b.h / 2);
+        context.stroke();
+      }
+      for (const box of boxes) {
+        const alpha = this.hoverMix * box.opacity;
+        if (alpha < 0.005) continue;
+        context.globalAlpha = alpha * 0.06;
+        context.fillRect(box.x, box.y, box.w, box.h);
+        context.globalAlpha = alpha * 0.9;
+        context.lineWidth = 0.9;
+        context.strokeRect(box.x, box.y, box.w, box.h);
+        const corner = Math.min(6, this.cell * 1.2);
+        context.lineWidth = 1.8;
+        context.beginPath();
+        for (const [x, y, sx, sy] of [[box.x, box.y, 1, 1], [box.x + box.w, box.y, -1, 1], [box.x, box.y + box.h, 1, -1], [box.x + box.w, box.y + box.h, -1, -1]]) {
+          context.moveTo(x + corner * sx, y); context.lineTo(x, y); context.lineTo(x, y + corner * sy);
+        }
+        context.stroke();
+        context.font = "9px Consolas, monospace";
+        context.textBaseline = "bottom";
+        context.fillText("x:" + String(Number(box.gridX.toFixed(1))).padStart(2, "0") + " y:" + String(Number(box.gridY.toFixed(1))).padStart(2, "0"), box.x, box.y - 5);
+        context.beginPath(); context.arc(box.x + box.w / 2, box.y + box.h / 2, 1.6, 0, Math.PI * 2); context.fill();
+      }
+      context.restore();
+    }
+  }
+
+  let cards = [];
+  function requestFrame() {
+    if (!raf && !document.hidden && !dialogOpen) raf = requestAnimationFrame(tick);
+  }
+  function tick(timestamp) {
+    raf = 0;
+    const dt = lastTime ? Math.min((timestamp - lastTime) / 1000, 1 / 30) : 1 / 60;
+    lastTime = timestamp;
+    if (playing) clock += dt;
+    /* 屏外但已有静帧的卡片不重绘：保留完整静帧，真正可见后再恢复循环 */
+    for (const card of cards) { if (card.visible || card.frames === 0) card.draw(dt); }
+    frames += 1;
+    if (playing && cards.some((card) => card.visible)) requestFrame();
+  }
+  function updateMotion(enabled) {
+    playing = enabled;
+    motionButton.setAttribute("aria-pressed", String(playing));
+    motionLabel.textContent = "动效";
+    lastTime = 0;
+    requestFrame();
+    /* 暂停时立即补画稳定静帧（含 DPR 比较），不依赖下一帧调度 */
+    if (!playing) for (const card of cards) if (card.visible) card.draw(0);
+  }
+
+  try {
+    if (typeof Path2D === "undefined") throw new Error("Path2D is unavailable.");
+    cards = [...document.querySelectorAll(".brand-card")].map((element) => new LineCard(element));
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) cards.find((card) => card.element === entry.target)?.resize();
+    });
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const card = cards.find((item) => item.element === entry.target);
+        if (card) {
+          card.visible = entry.isIntersecting;
+          /* 滚回视口先同步画一帧：暂停态得到稳定静帧，
+             播放态让 hoverMix 立即起步，避免恢复首帧近乎不可见 */
+          if (card.visible) card.draw(playing ? 1 / 60 : 0);
+        }
+      }
+      lastTime = 0; requestFrame();
+    }, { rootMargin: "80px" });
+    for (const card of cards) { resizeObserver.observe(card.element); intersectionObserver.observe(card.element); }
+    window.addEventListener("resize", () => { for (const card of cards) card.resize(); });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+      else { lastTime = 0; requestFrame(); }
+    });
+    reducedMotion.addEventListener("change", (event) => updateMotion(!event.matches));
+    motionButton.addEventListener("click", () => updateMotion(!playing));
+    /* 暂停态兜底：部分环境不派发 resolution 变化。低频比对 DPR，
+       仅在变化时更新缓冲并补画一个静帧，不安排连续动画。 */
+    setInterval(() => {
+      if (playing || document.hidden || dialogOpen) return;
+      const current = devicePixelRatio || 1;
+      for (const card of cards) {
+        if (card.visible && card.dpr !== current) card.resize();
+      }
+    }, 500);
+    updateMotion(playing);
+    window.mLineStudy = Object.freeze({
+      inspect: () => ({ samplingReads, frames, playing, grid: GRID, widthLevels: WIDTHS.slice(), path: M_PATH, cards: cards.map((card) => ({ brand: card.brand.name, dpr: card.dpr, cssWidth: card.width, cssHeight: card.height, backingWidth: card.canvas.width, backingHeight: card.canvas.height, luminanceLength: card.luminance.length, frames: card.frames, scanPasses: card.scanPasses, regions: card.regions.map((region) => ({ ...region })), hover: card.hoverMix, springOffset: Math.max(...card.dx.map(Math.abs)) })) })
+    });
+  } catch (error) {
+    document.getElementById("fallback").hidden = false;
+    motionButton.disabled = true;
+  }
+
+  /* 整卡可点击跳转：点击 / 回车进入对应子页；来源按钮独立打开弹窗 */
+  for (const cardElement of document.querySelectorAll(".brand-card")) {
+    const go = () => { const href = cardElement.dataset.href; if (href) location.assign(href); };
+    cardElement.addEventListener("click", (event) => {
+      if (event.target.closest("button, a")) return;
+      go();
+    });
+    cardElement.addEventListener("keydown", (event) => {
+      if (event.target !== cardElement) return;
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); go(); }
+    });
+  }
+
+  for (const button of document.querySelectorAll("[data-source]")) {
+    button.addEventListener("click", () => {
+      const brand = BRANDS[button.dataset.source];
+      document.getElementById("source-title").textContent = brand.name + ", before the lines.";
+      sourcePath = M_PATH;
+      document.getElementById("source-code").textContent = 'const path = new Path2D("' + M_PATH + '");\n// seed ' + brand.seed + " · scale " + brand.scale + " · 60×60 · 5× supersampling";
+      document.getElementById("copy-source").textContent = "复制路径";
+      dialogOpen = true;
+      cancelAnimationFrame(raf); raf = 0;
+      dialog.showModal();
+    });
+  }
+  dialog.querySelector(".close-button").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) { const bounds = dialog.getBoundingClientRect(); if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close(); } });
+  dialog.addEventListener("close", () => { dialogOpen = false; lastTime = 0; requestFrame(); });
+  document.getElementById("copy-source").addEventListener("click", async (event) => {
+    const button = event.currentTarget;
+    try { await navigator.clipboard.writeText(sourcePath); button.textContent = "已复制"; }
+    catch { button.textContent = "请选中上方路径手动复制"; }
+  });
+})();
+</script>
+</body>
+</html>

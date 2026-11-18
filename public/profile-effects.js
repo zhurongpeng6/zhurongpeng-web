@@ -2,20 +2,20 @@
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const compact = matchMedia('(max-width: 767px)');
 const fine = matchMedia('(hover: hover) and (pointer: fine)');
-const story = document.querySelector('.hero-story');
 const stage = document.querySelector('.device-stage');
 const canvas = document.querySelector('#metal-device');
 const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
 let renderer, scene, camera, assembly, rings, frame=0, progress=0, target=0, mx=0, my=0, visible=true, lost=false;
 let sceneReady=false;
-function layoutMode(){document.documentElement.classList.toggle('motion-ready',sceneReady&&!reduce.matches&&!compact.matches);}
-function progressAtScroll(){const r=story.getBoundingClientRect();return compact.matches||reduce.matches?0:clamp(-r.top/Math.max(1,story.offsetHeight-innerHeight+68),0,1);}
+function layoutMode(){}
+/* 新版首屏为静态两栏场景：装置姿态由指针视差驱动，不再绑定长滚动 */
+function progressAtScroll(){return 0;}
 function paint(){
  frame=0;
  if(!sceneReady||lost||reduce.matches||document.hidden||!visible)return;
  progress += (target-progress)*.13;
  if(Math.abs(target-progress)<.0002)progress=target;
- assembly.rotation.set(.4+progress*.32+my*.035,-.27+progress*.55+mx*.055,-.22+progress*.1);
+ assembly.rotation.set(.4+my*.09,-.27+mx*.16,-.22);
  rings[0].rotation.y=progress*.36;rings[1].rotation.x=-.13-progress*.62;rings[2].rotation.y=.16+progress*.74;
  rings[0].position.y=progress*.22;rings[1].position.y=progress*.06;rings[2].position.y=-progress*.1;
  renderer.render(scene,camera);canvas.dataset.frames=String(Number(canvas.dataset.frames||0)+1);
@@ -44,7 +44,7 @@ async function init(){
  if(initializing||reduce.matches)return;initializing=true;
  try{
  const T=await import('./vendor/three.module.min.js');const {RoomEnvironment}=await import('./vendor/RoomEnvironment.js');
- renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});renderer.setClearColor(0xffffff,0);renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.55;
+ renderer=new T.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});renderer.setClearColor(0xf3f2ed,0);renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.55;
  scene=new T.Scene();camera=new T.PerspectiveCamera(35,1,.1,100);camera.position.set(0,2.5,9.2);camera.lookAt(0,0,0);
  const pmrem=new T.PMREMGenerator(renderer);const room=new RoomEnvironment();const env=pmrem.fromScene(room,.03);scene.environment=env.texture;room.dispose();pmrem.dispose();
  scene.add(new T.HemisphereLight(0xffffff,0xa2a8b3,2.2));const key=new T.DirectionalLight(0xffffff,4);key.position.set(-4,6,5);scene.add(key);const rim=new T.DirectionalLight(0xc2dcff,2.2);rim.position.set(4,1,-3);scene.add(rim);

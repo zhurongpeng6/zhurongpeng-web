@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:,">
+<meta name="description" content="毛婆婆（朱荣鹏）的个人简介：控制工程研一在读，STM32 与 PID 爱好者，倒立摆稳定直立中。">
+<title>关于我 — 毛婆婆</title>
+<style>
+  /* Liquid Glass（StyleKit spec）：纸面底 + 细节场景；清透玻璃只给悬浮导航/标签/按钮，
+     正文与数据留在实色阅读卡；Chromium 默认 SVG 边缘位移折射，其余磨砂降级；
+     110ms 按压 / 420ms 回弹；系统字体；1120 版心 / 88 区块间距 */
+  :root{
+    --color-paper:#F3F2ED;--color-ink:#202929;--color-glass-scene:#25414A;--color-glass-mist:#E4EFEB;--color-focus:#557B79;
+    --muted:#5d6a67;--faint:#7d8781;--line:#e3e2d9;--solid:#FCFCFA;
+    --surface-clear:rgba(255,255,255,.12);--surface-tinted:rgba(239,245,242,.86);
+    --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',Roboto,sans-serif;
+    --text-display:56px;--text-heading-lg:40px;--text-heading:28px;--text-subheading:20px;--text-body-lg:16px;--text-body:14px;--text-label:12px;
+    --spacing-8:8px;--spacing-16:16px;--spacing-24:24px;--spacing-32:32px;--spacing-48:48px;--spacing-64:64px;--spacing-88:88px;
+    --radius-pill:999px;--radius-card:24px;--radius-menu:28px;
+    --elev-float:0 8px 24px rgba(19,37,41,.12),inset 0 1px 0 rgba(255,255,255,.72);
+    --ease-press:cubic-bezier(.3,.7,.4,1);--ease-settle:cubic-bezier(.22,1.35,.36,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:96px}
+  body{margin:0;color:var(--color-ink);background:var(--color-paper);font-family:var(--font-sans);font-size:var(--text-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--color-focus);outline-offset:3px;border-radius:var(--radius-pill)}
+  ::selection{background:var(--color-glass-mist)}
+  .wrap{width:min(1120px,calc(100% - 48px));margin-inline:auto}
+  .label{font-size:var(--text-label);font-weight:500;letter-spacing:.025em;color:var(--faint)}
+  /* 玻璃表面 */
+  .glass{position:relative;isolation:isolate;border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.3);background:var(--surface-clear);box-shadow:var(--elev-float);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4)}
+  .glass::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .4s;background:linear-gradient(118deg,rgba(255,255,255,.62),rgba(255,255,255,0) 26%),linear-gradient(298deg,rgba(255,255,255,.3),rgba(255,255,255,0) 24%)}
+  html.glass-refract .glass::before{opacity:1}
+  html.glass-refract .glass{border-color:rgba(255,255,255,.18)}
+  .glass-tinted{background:var(--surface-tinted);border-color:rgba(255,255,255,.55)}
+  /* 悬浮玻璃导航 */
+  .nav{position:fixed;top:16px;left:50%;translate:-50% 0;z-index:40;height:60px;display:flex;align-items:center;gap:var(--spacing-8);padding:6px 10px;color:var(--color-ink);transition:scale .42s var(--ease-settle)}
+  .nav.is-pressed{scale:.96;transition-duration:.11s;transition-timing-function:var(--ease-press)}
+  .nav .wordmark{font-size:var(--text-subheading);font-weight:600;padding:0 var(--spacing-16);white-space:nowrap}
+  .nav .wordmark em{font-style:normal;color:var(--color-focus)}
+  .nav nav{display:flex;gap:var(--spacing-4)}
+  .nav nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--spacing-16);border-radius:var(--radius-pill);font-size:var(--text-body);font-weight:500;color:var(--muted)}
+  .nav nav a:hover{color:var(--color-ink);background:rgba(85,123,121,.1)}
+  .nav .cta{margin-left:var(--spacing-8)}
+  .cta{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--spacing-24);border-radius:var(--radius-pill);background:var(--color-glass-scene);color:#fff;font-size:var(--text-body);font-weight:500;border:0;cursor:pointer;transition:scale .42s var(--ease-settle),background .3s}
+  .cta:hover{background:#2f525e}
+  .cta:active{scale:.96;transition-duration:.11s;transition-timing-function:var(--ease-press)}
+  .cta.light{background:var(--surface-tinted);color:var(--color-ink);border:1px solid rgba(255,255,255,.55);box-shadow:var(--elev-float)}
+  /* 首屏：左文右场景 */
+  .hero{display:grid;grid-template-columns:7fr 5fr;gap:var(--spacing-32);align-items:center;padding-top:124px}
+  .hero h1{margin:16px 0 0;font-size:clamp(40px,5vw,var(--text-display));font-weight:500;line-height:1.05;letter-spacing:-.045em}
+  .hero h1 span{color:#a9b0ab}
+  .hero .sub{margin:16px 0 0;font-size:var(--text-heading);font-weight:600;line-height:1.2}
+  .hero .lead{margin:16px 0 0;font-size:var(--text-body-lg);line-height:1.55;color:var(--muted);max-width:36em}
+  .hero-actions{display:flex;align-items:center;gap:var(--spacing-16);margin-top:var(--spacing-32);flex-wrap:wrap}
+  .ghost{display:inline-flex;align-items:center;min-height:44px;padding:0 var(--spacing-24);border-radius:var(--radius-pill);color:var(--color-focus);font-size:var(--text-body);font-weight:500;transition:scale .42s var(--ease-settle)}
+  .ghost:active{scale:.96;transition-duration:.11s}
+  .scene{position:relative;border-radius:var(--radius-card);overflow:hidden;background:linear-gradient(180deg,#FBFBF8 0%,var(--color-glass-mist) 130%);border:1px solid var(--line);box-shadow:0 1px 2px rgba(19,37,41,.04),0 16px 40px rgba(19,37,41,.07)}
+  .scene::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='560' viewBox='0 0 720 560'%3E%3Cg fill='none' stroke='%2325414A' stroke-opacity='.08' stroke-width='1.2'%3E%3Cpath d='M-30 420Q160 300 360 380T760 310'/%3E%3Cpath d='M-30 460Q180 350 370 420T760 360'/%3E%3Cpath d='M-30 500Q200 400 380 460T760 410'/%3E%3Cpath d='M-30 540Q220 450 390 500T760 455'/%3E%3Cpath d='M-30 380Q140 255 350 340T760 265'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center bottom;background-size:cover}
+  .scene img{position:relative;width:100%;height:auto;display:block;padding:var(--spacing-24)}
+  .scene .chip{position:absolute;top:var(--spacing-16);right:var(--spacing-16);display:inline-flex;align-items:center;min-height:36px;padding:0 var(--spacing-16);color:var(--color-ink);font-size:var(--text-label);font-weight:500;letter-spacing:.025em}
+  .id-card{position:relative;margin-top:var(--spacing-16);background:var(--solid);border:1px solid var(--line);border-radius:var(--radius-card);padding:var(--spacing-24);box-shadow:0 1px 2px rgba(19,37,41,.04),0 12px 32px rgba(19,37,41,.05)}
+  .id-name{font-size:var(--text-subheading);font-weight:600}
+  .id-aka{margin:8px 0 0;color:var(--muted)}
+  .id-status{display:inline-flex;align-items:center;gap:8px;margin-top:var(--spacing-16);padding:8px 16px;border-radius:var(--radius-pill);background:var(--color-glass-mist);font-size:var(--text-label);font-weight:500;letter-spacing:.025em;color:var(--color-glass-scene)}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--color-focus);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .id-note{margin:var(--spacing-16) 0 0;color:var(--muted)}
+  /* 区块：实色阅读卡 */
+  .section{padding-top:var(--spacing-88)}
+  .section h2{margin:16px 0 0;font-size:clamp(28px,3.4vw,var(--text-heading-lg));font-weight:500;line-height:1.12;letter-spacing:-.035em}
+  .section .desc{margin:16px 0 0;font-size:var(--text-subheading);line-height:1.35;color:var(--muted);max-width:44em}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-16);margin-top:var(--spacing-48)}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-16);margin-top:var(--spacing-48)}
+  .card{background:var(--solid);border:1px solid var(--line);border-radius:var(--radius-card);padding:var(--spacing-24);box-shadow:0 1px 2px rgba(19,37,41,.04),0 12px 32px rgba(19,37,41,.05)}
+  .card h3{margin:0;font-size:var(--text-heading);font-weight:600;line-height:1.2}
+  .card .meta{margin:8px 0 0;font-size:var(--text-label);font-weight:500;letter-spacing:.025em;color:var(--faint)}
+  .card p{margin:16px 0 0;color:var(--muted);line-height:1.55}
+  .card .quip{margin:16px 0 0;color:var(--color-focus);font-weight:500}
+  .skill{margin-top:var(--spacing-24)}
+  .skill .row{display:flex;justify-content:space-between;align-items:baseline;gap:var(--spacing-16)}
+  .skill .name{font-size:var(--text-body-lg);font-weight:500}
+  .skill .val{font-size:var(--text-label);font-weight:500;letter-spacing:.025em;color:var(--color-focus);white-space:nowrap}
+  .bar{height:6px;margin-top:8px;border-radius:var(--radius-pill);background:var(--color-glass-mist);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:var(--radius-pill);background:linear-gradient(90deg,#9db8b2,var(--color-focus))}
+  .bar.gold i{background:linear-gradient(90deg,#c9b98a,var(--color-glass-scene))}
+  .stat{background:var(--solid);border:1px solid var(--line);border-radius:var(--radius-card);padding:var(--spacing-24);box-shadow:0 1px 2px rgba(19,37,41,.04),0 12px 32px rgba(19,37,41,.05)}
+  .stat .label{display:block}
+  .stat .fig{margin:8px 0 0;font-size:var(--text-heading-lg);font-weight:600;line-height:1.12}
+  .stat .fig.gold{color:var(--color-glass-scene)}
+  .stat .note{margin:8px 0 0;color:var(--muted)}
+  .toy .tag{display:inline-flex;padding:6px 14px;border-radius:var(--radius-pill);background:var(--color-glass-mist);font-size:var(--text-label);font-weight:500;letter-spacing:.025em;color:var(--color-glass-scene)}
+  .toy h3{margin:16px 0 0}
+  footer{margin-top:var(--spacing-88);padding:var(--spacing-32) 0 calc(var(--spacing-48) + 16px);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-16);flex-wrap:wrap;color:var(--faint)}
+  footer .links{display:flex;gap:var(--spacing-24)}
+  footer a{min-height:44px;display:inline-flex;align-items:center}
+  footer a:hover{color:var(--color-ink)}
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:104px}
+    .grid-2,.grid-3{grid-template-columns:1fr}
+    .nav nav{display:none}
+    .section{padding-top:var(--spacing-64)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{transition:none!important;animation:none!important}
+  }
+  @media (prefers-reduced-transparency:reduce){
+    .glass{background:var(--color-glass-mist);-webkit-backdrop-filter:none;backdrop-filter:none}
+    .glass::before{display:none}
+  }
+</style>
+</head>
+<body>
+<header class="nav glass glass-tinted" id="glassNav">
+  <a class="wordmark" href="./index.html">毛婆婆<em>.</em></a>
+  <nav aria-label="页面导航"><a href="#school">跨考玩家</a><a href="#skills">技能背包</a><a href="#toys">玩具清单</a></nav>
+  <a class="cta" href="./works.html">去翻作品 ↗</a>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <span class="label">Player profile · 非求职页面</span>
+      <h1>朱荣鹏<span>。</span><br>江湖人称毛婆婆</h1>
+      <p class="sub">控制工程研一在读 · 白天调 PID，晚上调生活</p>
+      <p class="lead">本科玩数据，硕士玩电机，现在专职让各种东西「稳住别倒」。擅长把英文芯片手册当睡前读物，把示波器波形当心电图看。这不是简历，是我的玩家档案。</p>
+      <div class="hero-actions"><a class="cta" href="#toys">看看我的玩具 ↓</a><a class="ghost glass glass-tinted" href="./life.html">屏幕之外的我 →</a></div>
+    </div>
+    <div>
+      <div class="scene"><img src="./assets/profile/device-fallback.png" width="1400" height="750" alt="原创银色精密环形装置，象征控制、感知与探索"><span class="chip glass glass-tinted">状态：倒立摆稳定直立中</span></div>
+      <aside class="id-card">
+        <span class="label">ID card</span>
+        <div class="id-name">朱荣鹏 / 毛婆婆</div>
+        <p class="id-aka">山东科技大学 · 控制工程硕士<br>2026.09 – 2029.06（预计）</p>
+        <p class="id-note">考研初试专业前 10%。理论推导 → 嵌入式实现 → 实机整定，一条龙自己来。</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="school">
+    <span class="label">Cross-over</span>
+    <h2>跨考玩家：从数据到电机</h2>
+    <p class="desc">别人跨考掉层皮，我跨考掉了个方向——从大数据管理与应用，一头扎进控制工程。软硬件实践靠倒立摆和电机闭环一个个项目补回来。</p>
+    <div class="grid-2">
+      <article class="card"><h3>大数据管理与应用 · 本科</h3><p class="meta">山东科技大学 · 2022.09 – 2026.06</p><p>毕业设计用随机森林给「居民消费」算了一卦：pandas 洗数据、scikit-learn 建模，特征重要性排排坐，找出谁在偷偷影响大家花钱。</p><p class="quip">数据会说话，我只是翻译。</p></article>
+      <article class="card"><h3>控制工程 · 硕士</h3><p class="meta">山东科技大学 · 2026.09 – 2029.06（预计）</p><p>考研初试专业前 10%，控制理论与数理基础扎实。入学后迅速把「理论推导 → 嵌入式实现 → 实机整定」点成完整闭环技能树。</p><p class="quip">公式不落地，等于没学。</p></article>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <span class="label">Inventory</span>
+    <h2>技能背包</h2>
+    <p class="desc">主武器 C 语言，副武器 Python；背包里塞满 PID 变种和芯片手册。</p>
+    <div class="grid-2">
+      <article class="card">
+        <h3>装备栏</h3>
+        <div class="skill"><div class="row"><span class="name">C 语言（指针 / 结构体 / 位运算）</span><span class="val">主武器</span></div><div class="bar gold"><i style="width:95%"></i></div></div>
+        <div class="skill"><div class="row"><span class="name">PID 全家桶 · 12 种变种</span><span class="val">精通</span></div><div class="bar gold"><i style="width:92%"></i></div></div>
+        <div class="skill"><div class="row"><span class="name">STM32F103 · 寄存器级驱动</span><span class="val">熟练</span></div><div class="bar"><i style="width:88%"></i></div></div>
+        <div class="skill"><div class="row"><span class="name">Python · pandas / scikit-learn</span><span class="val">副武器</span></div><div class="bar"><i style="width:80%"></i></div></div>
+        <div class="skill"><div class="row"><span class="name">Keil / CubeMX / ST-Link 联调</span><span class="val">日常</span></div><div class="bar"><i style="width:85%"></i></div></div>
+      </article>
+      <article class="card">
+        <h3>被动技能</h3>
+        <p>· 积分限幅、积分分离、变速积分、微分先行、不完全微分、串级 / 双环 PID——知道每个变种在治什么病。</p>
+        <p>· USART / SPI / I²C 时序与主从仲裁门儿清；GPIO、TIM、ADC、EXTI、NVIC 随手配置。</p>
+        <p>· 习惯啃原厂英文手册解决底层问题，datasheet 阅读速度随咖啡浓度提升。</p>
+        <p class="quip">bug 不怕多，就怕示波器没接。</p>
+      </article>
+    </div>
+    <div class="grid-3">
+      <div class="stat"><span class="label">PID variants</span><div class="fig gold">12</div><p class="note">种算法实现并对比，超调 / 稳态 / 抗扰逐个验。</p></div>
+      <div class="stat"><span class="label">Inverted pendulum</span><div class="fig">0 倒</div><p class="note">一级倒立摆稳定直立，敲一下也能自己回正。</p></div>
+      <div class="stat"><span class="label">Grad exam rank</span><div class="fig">前 10%</div><p class="note">考研初试专业排名，理论底子不虚。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="toys">
+    <span class="label">Toy list</span>
+    <h2>玩具清单（个人项目）</h2>
+    <p class="desc">不是作业，是玩具。每一个都从原理图玩到实机整定。</p>
+    <div class="grid-3">
+      <article class="card toy"><span class="tag">2026.09 – 10</span><h3>一级倒立摆</h3><p>STM32F103C8T6 当小脑，编码器读摆杆角度，PWM 驱动小车。串级 PID：内环管角度、外环管位置，硬件中断保证控制周期不抖。</p><p class="quip">它站得比我还稳。</p></article>
+      <article class="card toy"><span class="tag">2026.10</span><h3>电机闭环调速</h3><p>编码器测速 + PWM 驱动搭速度闭环，12 种 PID 同台竞技：积分饱和、噪声放大、阶跃振荡，逐个对症下药并定量对比。</p><p class="quip">电机：我转多快，你说了算。</p></article>
+      <article class="card toy"><span class="tag">2026.01 – 05</span><h3>随机森林算消费</h3><p>本科毕设：清洗、标准化、特征工程一条龙，随机森林回归量化各维度对居民消费的影响权重，核心因子排排坐。</p><p class="quip">森林不种树，种特征重要性。</p></article>
+    </div>
+  </section>
+
+  <footer>
+    <span>保持好奇，未完待续。· 屏幕之外：跑步 / 骑车 / 健身</span>
+    <span class="links"><a href="./works.html">作品 →</a><a href="./life.html">生活 →</a><a href="./index.html">返回研究 →</a></span>
+  </footer>
+</main>
+<script>
+/* 液态玻璃微渲染器：Chromium 默认 SVG 边缘位移折射（平坦中心 + 曲面边带 + 极轻色散），
+   其他浏览器保留磨砂降级；导航按压 110ms 压缩、释放 420ms 回弹。思路参考 MIT 的
+   rdev/liquid-glass-react 与 shuding/liquid-glass，独立实现，未复制源码。 */
+(() => {
+'use strict';
+const root = document.documentElement;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const lessT = matchMedia('(prefers-reduced-transparency: reduce)');
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+function buildMap(w,h,r,band,strength){
+  const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+  const cx=cv.getContext('2d');const img=cx.createImageData(w,h);const d=img.data;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const qx=Math.abs(x-w/2)-(w/2-r),qy=Math.abs(y-h/2)-(h/2-r);
+    const ax=Math.max(qx,0),ay=Math.max(qy,0);
+    const dist=Math.hypot(ax,ay)+Math.min(Math.max(qx,qy),0)-r;const t=-dist;
+    let nx=0,ny=0;
+    if(qx>0&&qy>0){const l=Math.hypot(qx,qy)||1;nx=Math.sign(x-w/2)*qx/l;ny=Math.sign(y-h/2)*qy/l;}
+    else if(qx>qy)nx=Math.sign(x-w/2);else ny=Math.sign(y-h/2);
+    let m=0;if(t>0&&t<band){const u=1-t/band;m=Math.pow(Math.sin(u*Math.PI/2),1.6);}
+    const i=(y*w+x)*4;
+    d[i]=clamp(Math.round(128-nx*m*strength),0,255);
+    d[i+1]=clamp(Math.round(128-ny*m*strength*0.93),0,255);
+    d[i+2]=128;d[i+3]=255;
+  }
+  cx.putImageData(img,0,0);return cv.toDataURL('image/png');
+}
+const NS='http://www.w3.org/2000/svg';
+const host=document.createElementNS(NS,'svg');host.setAttribute('width','0');host.setAttribute('height','0');host.setAttribute('aria-hidden','true');host.style.position='absolute';
+const defs=document.createElementNS(NS,'defs');host.appendChild(defs);document.body.appendChild(host);
+const probe=document.createElement('div');probe.style.backdropFilter='url(#lg-probe)';
+const supported=probe.style.backdropFilter!=='';
+let uid=0;const items=[];
+function make(item){
+  const el=item.el,w=Math.max(2,Math.round(el.offsetWidth)),h=Math.max(2,Math.round(el.offsetHeight));
+  if(item.w===w&&item.h===h)return;item.w=w;item.h=h;
+  const r=Math.min(h/2,w/2),band=clamp(Math.round(Math.min(w,h)*0.3),8,24),strength=clamp(Math.round(band*1.1),8,26);
+  if(item.f)item.f.remove();
+  const f=document.createElementNS(NS,'filter');f.id='lg-'+(++uid);
+  f.setAttribute('x','-20%');f.setAttribute('y','-20%');f.setAttribute('width','140%');f.setAttribute('height','140%');f.setAttribute('color-interpolation-filters','sRGB');
+  const im=document.createElementNS(NS,'feImage');im.setAttribute('href',buildMap(w,h,r,band,strength));
+  im.setAttribute('x','0');im.setAttribute('y','0');im.setAttribute('width',String(w));im.setAttribute('height',String(h));im.setAttribute('preserveAspectRatio','none');im.setAttribute('result','map');
+  const dm=document.createElementNS(NS,'feDisplacementMap');dm.setAttribute('in','SourceGraphic');dm.setAttribute('in2','map');dm.setAttribute('scale',String(strength*2));dm.setAttribute('xChannelSelector','R');dm.setAttribute('yChannelSelector','G');
+  f.appendChild(im);f.appendChild(dm);defs.appendChild(f);item.f=f;
+  const bf='url(#'+f.id+') saturate(1.35)';el.style.webkitBackdropFilter=bf;el.style.backdropFilter=bf;
+}
+function clear(item){if(item.f){item.f.remove();item.f=null;}item.w=item.h=0;item.el.style.webkitBackdropFilter='';item.el.style.backdropFilter='';}
+function sync(){
+  const on=supported&&!reduce.matches&&!lessT.matches;
+  root.classList.toggle('glass-refract',on);
+  for(const item of items){if(!on||item.el.offsetParent===null){clear(item);continue;}make(item);}
+}
+for(const el of document.querySelectorAll('.glass')){
+  const item={el,f:null,w:0,h:0};items.push(item);
+  if('ResizeObserver' in window)new ResizeObserver(()=>{if(root.classList.contains('glass-refract'))make(item);}).observe(el);
+}
+reduce.addEventListener('change',sync);lessT.addEventListener('change',sync);sync();
+const nav=document.getElementById('glassNav');
+if(nav){
+  nav.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;if(e.pointerType!=='touch')e.preventDefault();nav.classList.add('is-pressed');});
+  const up=()=>nav.classList.remove('is-pressed');
+  nav.addEventListener('pointerup',up);nav.addEventListener('pointercancel',up);nav.addEventListener('pointerleave',up);
+}
+})();
+</script>
+</body>
+</html>
